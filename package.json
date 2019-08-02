@@ -1,0 +1,19 @@
+{
+  "name": "@nekobird/ui-controls",
+  "version": "0.0.1",
+  "description": "A collection of powerful user-interface controls.",
+  "main": "build/ui-controls.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nekobird/ui-controls.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nekobird/ui-controls/issues"
+  },
+  "homepage": "https://github.com/nekobird/ui-controls#readme"
+}
