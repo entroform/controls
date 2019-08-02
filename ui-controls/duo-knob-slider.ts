@@ -84,8 +84,9 @@ export class DuoKnobSlider {
     this.listen();
   }
 
-  public setConfig(config: Partial<DuoKnobSliderConfig>) {
+  public setConfig(config: Partial<DuoKnobSliderConfig>): this {
     if (typeof config === 'object') Object.assign(this.config, config);
+    return this;
   }
 
   public set value(value: [number, number]) {
@@ -278,7 +279,7 @@ export class DuoKnobSlider {
   public listen() {
     const { knobOneElement, knobTwoElement } = this.config;
     if (
-         DOMUtil.isHTMLElement(knobOneElement) === true
+      DOMUtil.isHTMLElement(knobOneElement) === true
       && DOMUtil.isHTMLElement(knobTwoElement) === true
     ) {
       this.knobOnePointerDragEventManager = new PointerDragEventManager({
