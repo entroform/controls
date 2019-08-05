@@ -11,11 +11,11 @@ export interface TextAreaFieldConfig {
   removeLeadingWhitespaces: boolean;
   removeMultipleWhitespaces: boolean;
 
-  onBlur: (context: TextAreaField) => void;
-  onFocus: (context: TextAreaField) => void;
-  onInput: (context: TextAreaField) => void;
-  onPaste: (context: TextAreaField) => void;
-  onGrow: (height: number, context: TextAreaField) => void;
+  onBlur: (textareafield: TextAreaField) => void;
+  onFocus: (textareafield: TextAreaField) => void;
+  onInput: (textareafield: TextAreaField) => void;
+  onPaste: (textareafield: TextAreaField) => void;
+  onGrow: (height: number, textareafield: TextAreaField) => void;
 }
 
 const TEXTAREAFIELD_DEFAULT_CONFIG: TextAreaFieldConfig = {  
