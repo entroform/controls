@@ -1,10 +1,38 @@
 @import 'reset';
-
 @import 'config';
 @import 'utilities';
 @import 'variables/index';
 
+%style-font-normalized {
+  @include apply-font-size('base');
+  font-family: font-family('primary');
+}
+
+html {
+  @extend %style-font-normalized;
+}
+
+.site-content {
+  box-sizing: border-box;
+  height: 100vh;
+  max-width: 100%;
+  padding: space('medium');
+}
+
 .textareafield {
+  @extend %style-font-normalized;
+
   border: px-to-rem(1) solid color('black');
+  box-sizing: border-box;
+  margin-bottom: space('medium');
+  padding: space('small');
   resize: none;
+}
+
+.duoKnobSlider {
+  .duoKnobSlider__track {
+    background-color: color('black');
+    height: px-to-rem(40);
+    width: 100%;
+  }
 }
