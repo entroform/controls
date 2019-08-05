@@ -4,6 +4,8 @@ import {
 } from '@nekobird/rocket';
 
 export interface TextAreaFieldConfig {
+  element?: HTMLTextAreaElement;
+
   disableLineBreaks: boolean;
   disableTabs: boolean;
 
@@ -18,7 +20,9 @@ export interface TextAreaFieldConfig {
   onGrow: (height: number, textareafield: TextAreaField) => void;
 }
 
-const TEXTAREAFIELD_DEFAULT_CONFIG: TextAreaFieldConfig = {  
+const TEXTAREAFIELD_DEFAULT_CONFIG: TextAreaFieldConfig = {
+  element: undefined,
+
   disableLineBreaks: false,
   disableTabs: false,
   limitNumberOfCharacters: false,
@@ -36,22 +40,24 @@ export class TextAreaField {
   public textBoxModel: TextBoxModel;
 
   public config: TextAreaFieldConfig;
-  public element: HTMLTextAreaElement;
   
   public isInFocus: boolean = false;
   public previousKeyCode?: number;
 
-  constructor(element: HTMLTextAreaElement, config?: Partial<TextAreaFieldConfig>) {
+  constructor(config?: Partial<TextAreaFieldConfig>) {
     this.config = Object.assign({}, TEXTAREAFIELD_DEFAULT_CONFIG);
     this.setConfig(config);
 
     this.textBoxModel = new TextBoxModel;
-    this.element = element;
   }
 
   public setConfig(config?: Partial<TextAreaFieldConfig>): this {
     if (typeof config === 'object') Object.assign(this.config, config);
-    return this;
+    if (TextAreaField.isHTMLTextAreaElement(this.config.element) === true) {
+      return this;
+    } else {
+      throw new Error('@nekobird/controls: TextAreaField: Element is undefined or is not a valid HTMLTextAreaElement.');
+    }
   }
 
   public initialize(): this {
@@ -62,26 +68,30 @@ export class TextAreaField {
   }
 
   get selected(): string {
-    const start = this.element.selectionStart;
-    const end = this.element.selectionEnd;
+    const element = this.config.element as HTMLTextAreaElement;
+    const start = element.selectionStart;
+    const end = element.selectionEnd;
     return this.value.substring(start, end);
   }
 
   public insert(string: string): this {
-    const start: number = this.element.selectionStart;
-    const end: number = this.element.selectionEnd;
-    const text: string = this.element.value;
-    this.element.value = text.substring(0, start) + string + text.substring(end);
-    this.element.selectionEnd = start + string.length;
+    const element = this.config.element as HTMLTextAreaElement;
+    const start = element.selectionStart;
+    const end = element.selectionEnd;
+    const text = element.value;
+    element.value = text.substring(0, start) + string + text.substring(end);
+    element.selectionEnd = start + string.length;
     return this;
   }
 
   get value(): string {
-    return this.element.value;
+    const element = this.config.element as HTMLTextAreaElement;
+    return element.value;
   }
 
   set value(value: string) {
-    this.element.value = value;
+    const element = this.config.element as HTMLTextAreaElement;
+    element.value = value;
     this.filterAndGrow();
   }
 
@@ -90,15 +100,15 @@ export class TextAreaField {
   }
 
   get lineCount(): number {
-    const lineHeight = <number>DOMStyle.getLineHeight(this.element);
+    const lineHeight = DOMStyle.getLineHeight(this.config.element);
     const offset = this.getHeight('') - lineHeight;
     return (this.getHeight() - offset) / lineHeight;
   }
 
   public getHeight(text?: string): number {
     if (typeof text === 'string')
-      return this.textBoxModel.getTextBoxHeightFromElement(this.element, text);
-    return this.textBoxModel.getTextBoxHeightFromElement(this.element);
+      return this.textBoxModel.getTextBoxHeightFromElement(this.config.element, text);
+    return this.textBoxModel.getTextBoxHeightFromElement(this.config.element);
   }
 
   // TODO Rename This...
@@ -109,37 +119,39 @@ export class TextAreaField {
   }
   
   public grow(): this {
-    const height: number = this.textBoxModel.getTextBoxHeightFromElement(this.element);
-    this.element.style.height = `${height}px`;
+    const height = this.textBoxModel.getTextBoxHeightFromElement(this.config.element);
+    const element = this.config.element as HTMLTextAreaElement;
+    element.style.height = `${height}px`;
     this.config.onGrow(height, this);
     return this;
   }
 
   public filterInput(): this {
+    const element = this.config.element as HTMLTextAreaElement;
     // Remove new lines.
     if (this.config.disableLineBreaks === true)
-      this.element.value = this.element.value.replace(/[\r\n]+/g, '');
+      element.value = element.value.replace(/[\r\n]+/g, '');
     // Remove tabs.
     if (this.config.disableTabs === true)
-      this.element.value = this.element.value.replace(/[\t]+/g, '');
+      element.value = element.value.replace(/[\t]+/g, '');
     // Remove multiple whitespaces to one.
     if (this.config.removeMultipleWhitespaces === true)
-      this.element.value = this.element.value.replace(/[\s]+/g, ' ');
+      element.value = element.value.replace(/[\s]+/g, ' ');
     // Remove leading whitespaces.
     if (this.config.removeLeadingWhitespaces === true)
-      this.element.value = this.element.value.replace(/^[\s]+/g, '');
+      element.value = element.value.replace(/^[\s]+/g, '');
     // Trim element value if limit number of characters is a number.
     if (typeof this.config.limitNumberOfCharacters === 'number')
-      this.element.value = this.element.value.substring(
+      element.value = element.value.substring(
         0, this.config.limitNumberOfCharacters
       );
     // Replace tabs with spaces.
     // TODO: Fix this because it's not working as intended.
-    // this.element.value = this.element.value.replace(/[\t]+/g, '    ')
+    // this.config.element.value = this.config.element.value.replace(/[\t]+/g, '    ')
     return this;
   }
 
-  // @event_handler
+  // @event-handlers
 
   private handleBlur = () => {
     this.isInFocus = false;
@@ -177,22 +189,37 @@ export class TextAreaField {
   // @listen
 
   private listen() {
-    this.element.addEventListener('blur', this.handleBlur);
-    this.element.addEventListener('focus', this.handleFocus);
-    this.element.addEventListener('input', this.handleInput);
-    this.element.addEventListener('keydown', this.handleKeydown);
-    this.element.addEventListener('paste', this.handlePaste);
+    const element = this.config.element as HTMLTextAreaElement;
+    element.addEventListener('blur', this.handleBlur);
+    element.addEventListener('focus', this.handleFocus);
+    element.addEventListener('input', this.handleInput);
+    element.addEventListener('keydown', this.handleKeydown);
+    element.addEventListener('paste', this.handlePaste);
     window.addEventListener('resize', this.handleInput);
     return this;
   }
 
-  private stopListen() {
-    this.element.removeEventListener('blur', this.handleBlur);
-    this.element.removeEventListener('focus', this.handleFocus);
-    this.element.removeEventListener('input', this.handleInput);
-    this.element.removeEventListener('keydown', this.handleKeydown);
-    this.element.removeEventListener('paste', this.handlePaste);
+  public stopListen() {
+    const element = this.config.element as HTMLTextAreaElement;
+    element.removeEventListener('blur', this.handleBlur);
+    element.removeEventListener('focus', this.handleFocus);
+    element.removeEventListener('input', this.handleInput);
+    element.removeEventListener('keydown', this.handleKeydown);
+    element.removeEventListener('paste', this.handlePaste);
     window.removeEventListener('resize', this.handleInput);
     return this;
+  }
+
+  // @static
+
+  public static isHTMLTextAreaElement(element): boolean {
+    return (
+      typeof element === 'object'
+      && typeof element.nodeType === 'number'
+      && element.nodeType === 1
+      && typeof element.nodeName === 'string'
+      && element.nodeName === 'TEXTAREA'
+      && element instanceof HTMLTextAreaElement
+    );
   }
 }

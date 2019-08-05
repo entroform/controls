@@ -5,7 +5,9 @@ import {
 const textareaElements = document.querySelectorAll('.textareafield');
 
 Array.from(textareaElements).forEach(textareaElement => {
-  const textareaField = new TextAreaField(textareaElement as HTMLTextAreaElement);
+  const textareaField = new TextAreaField({
+    element: textareaElement as HTMLTextAreaElement,
+  });
   textareaField.initialize();
 });
 
