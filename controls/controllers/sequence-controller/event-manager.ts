@@ -1,7 +1,7 @@
 import {
   DOMTraverse,
   DragEventManager,
-} from '../../rocket';
+} from '@nekobird/rocket';
 
 import {
   SequenceController,

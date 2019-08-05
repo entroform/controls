@@ -1,7 +1,10 @@
 @import 'reset';
 
+@import 'config';
+@import 'utilities';
+@import 'variables/index';
+
 .textareafield {
-  border: 1px solid black;
+  border: px-to-rem(1) solid color('black');
   resize: none;
 }
-

@@ -3,15 +3,15 @@ import {
 } from '@nekobird/rocket';
 
 export interface SwitchControlConfig {
-  target: HTMLElement;
+  target?: HTMLElement;
   onToggle: (element: HTMLElement, value: boolean, control: SwitchControl) => void;
   transformValue: <V>(element: HTMLElement, value: boolean, control: SwitchControl) => V;
 }
 
-export const TOGGLE_CONTROL_DEFAULT_CONFIG = {
+export const TOGGLE_CONTROL_DEFAULT_CONFIG: SwitchControlConfig = {
   target: undefined,
   onToggle: () => {},
-  transformValue: (element, value) => value,
+  transformValue: <value>(element, value) => value,
 };
 
 export class SwitchControl {
@@ -29,10 +29,13 @@ export class SwitchControl {
   }
 
   public get value() {
-    const value = this.config.transformValue(this.config.target, this.isOn, this);
-    if (typeof value === 'undefined' || value === null)
-      return this.isOn;
-    return value;
+    if (DOMUtil.isHTMLElement(this.config.target) === true) {
+      const target = this.config.target as HTMLElement;
+      const value = this.config.transformValue(target, this.isOn, this);
+      if (typeof value === 'undefined' || value === null)
+        return this.isOn;
+      return value;
+    }
   }
 
   private toggle() {
@@ -41,13 +44,18 @@ export class SwitchControl {
 
   private clickHandler = event => {
     if (this.isDisabled === false) {
-      this.toggle();
-      this.config.onToggle(this.config.target, this.isOn, this);
+      if (DOMUtil.isHTMLElement(this.config.target) === true) {
+        const target = this.config.target as HTMLElement;
+        this.toggle();
+        this.config.onToggle(target, this.isOn, this);
+      }
     }
   }
 
   public listen() {
-    if (DOMUtil.isHTMLElement(this.config.target) === true)
-      this.config.target.addEventListener('click', this.clickHandler);
+    if (DOMUtil.isHTMLElement(this.config.target) === true) {
+      const target = this.config.target as HTMLElement;
+      target.addEventListener('click', this.clickHandler);
+    }
   }
 }

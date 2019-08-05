@@ -1,6 +1,6 @@
 import {
   StringUtil,
-} from '../../rocket';
+} from '@nekobird/rocket';
 
 import {
   SequenceTriggerMap,
