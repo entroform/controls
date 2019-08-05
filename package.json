@@ -1,7 +1,7 @@
 {
   "name": "@nekobird/controls",
   "version": "0.0.1",
-  "description": "A collection of user-interface controls.",
+  "description": "A collection of opinionated user-interface controls.",
   "homepage": "https://github.com/nekobird/controls#readme",
   "bugs": {
     "url": "https://github.com/nekobird/controls/issues"
