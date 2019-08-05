@@ -260,8 +260,10 @@ export class DuoKnobSlider {
   }
 
   private checkIfActive() {
-    if (this.knobOneIsActive === false && this.knobTwoIsActive === false)
-      this.isActive = false;
+    if (
+      this.knobOneIsActive === false
+      && this.knobTwoIsActive === false
+    ) this.isActive = false;
   }
 
   private onUpdate() {

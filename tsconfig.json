@@ -13,7 +13,7 @@
     "target": "ES2015",
   },
   "include": [
-    "ui-controls/*",
+    "controls/*",
   ],
   "exclude": [
     "node_modules",

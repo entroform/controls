@@ -1,4 +1,5 @@
 export * from './sortable-list/sortable-list';
+export * from './controllers/index';
 
 export * from './text-area-field';
 export * from './input-active-manager';
