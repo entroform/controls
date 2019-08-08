@@ -1,6 +1,4 @@
-import {
-  TextAreaField,
-} from '../../../controls/controls';
+import { TextAreaField } from '../../../controls/controls';
 
 const textareaElements = document.querySelectorAll('.textareafield');
 
