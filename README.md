@@ -1,12 +1,12 @@
-# Controls 👆
+# 🥢 Controls
 
 A collection of opinionated user-interface controls.
 
-Powered by [Rocket](https://github.com/nekobird/rocket).
+Powered by [@nekobird/rocket](https://github.com/nekobird/rocket).
 
 ## Install
 
-Add `@nekobird/controls` into your project.
+Add **Controls** into your project.
 
 ```
 npm i @nekobird/controls
