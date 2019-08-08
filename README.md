@@ -6,7 +6,7 @@ Powered by [@nekobird/rocket](https://github.com/nekobird/rocket).
 
 ## Install
 
-Add **Controls** into your project.
+Add **controls** into your project.
 
 ```
 npm i @nekobird/controls
