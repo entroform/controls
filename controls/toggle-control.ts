@@ -2,29 +2,29 @@ import {
   DOMUtil,
 } from '@nekobird/rocket';
 
-export interface SwitchControlConfig {
+export interface ToggleControlConfig {
   target?: HTMLElement;
-  onToggle: (element: HTMLElement, value: boolean, control: SwitchControl) => void;
-  transformValue: <V>(element: HTMLElement, value: boolean, control: SwitchControl) => V;
+  onToggleControl: (element: HTMLElement, value: boolean, control: ToggleControl) => void;
+  transformValue: <V>(element: HTMLElement, value: boolean, control: ToggleControl) => V;
 }
 
-export const TOGGLE_CONTROL_DEFAULT_CONFIG: SwitchControlConfig = {
+export const TOGGLE_CONTROL_DEFAULT_CONFIG: ToggleControlConfig = {
   target: undefined,
-  onToggle: () => {},
+  onToggleControl: () => {},
   transformValue: <value>(element, value) => value,
 };
 
-export class SwitchControl {
-  public config: SwitchControlConfig;
+export class ToggleControl {
+  public config: ToggleControlConfig;
   public isOn: boolean = false;
   public isDisabled: boolean = false;
 
-  constructor(config: Partial<SwitchControlConfig>) {
+  constructor(config: Partial<ToggleControlConfig>) {
     this.config = Object.assign({}, TOGGLE_CONTROL_DEFAULT_CONFIG);
     this.setConfig(config);
   }
 
-  public setConfig(config: Partial<SwitchControlConfig>) {
+  public setConfig(config: Partial<ToggleControlConfig>) {
     if (typeof config === 'object') Object.assign(this.setConfig, config);
   }
 
@@ -47,7 +47,7 @@ export class SwitchControl {
       if (DOMUtil.isHTMLElement(this.config.target) === true) {
         const target = this.config.target as HTMLElement;
         this.toggle();
-        this.config.onToggle(target, this.isOn, this);
+        this.config.onToggleControl(target, this.isOn, this);
       }
     }
   }
