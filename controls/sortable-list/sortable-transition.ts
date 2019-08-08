@@ -1,11 +1,6 @@
-import {
-  DOMStyle,
-  DOMUtil,
-} from '@nekobird/rocket';
+import { DOMStyle, DOMUtil } from '@nekobird/rocket';
 
-import {
-  SortableList,
-} from './sortable-list';
+import { SortableList } from './sortable-list';
 
 export interface ItemModel {
   item: HTMLElement;
@@ -17,11 +12,9 @@ export interface ItemModel {
   height: number;
 }
 
-export interface TargetModel extends ItemModel {
+export interface TargetModel extends ItemModel {}
 
-}
-
-// TODO: Add support 
+// TODO: Add support
 export class SortableListTransition {
   public sortable: SortableList;
 
@@ -39,13 +32,7 @@ export class SortableListTransition {
 
   // 1) Everything starts from here.
   public go(group: HTMLElement, target: HTMLElement, callback: Function) {
-    if (
-      this.isActive === false
-      || (
-        this.isActive === true
-        && this.group !== group
-      )
-    ) {
+    if (this.isActive === false || (this.isActive === true && this.group !== group)) {
       this.group = group;
       this.create();
       this.prepare();
@@ -64,22 +51,15 @@ export class SortableListTransition {
 
   // 2) Create initial base model.
   public create() {
-    if (
-      this.isActive === false
-      && typeof this.group === 'object'
-    ) {
+    if (this.isActive === false && typeof this.group === 'object') {
       const { elementManager, dummy } = this.sortable;
       this.baseModel = [];
       const items = elementManager.getItemsFromGroup(this.group);
       items.forEach(item => {
-        (this.baseModel as ItemModel[]).push(
-          this.createModelFromElement(item)
-        );
+        (this.baseModel as ItemModel[]).push(this.createModelFromElement(item));
       });
       // Add dummy element to base model.
-      this.baseModel.push(
-        this.createModelFromElement(dummy.element as HTMLElement)
-      );
+      this.baseModel.push(this.createModelFromElement(dummy.element as HTMLElement));
       this.baseModel.sort((a, b) => a.top - b.top);
       this.isActive = true;
     }
@@ -105,7 +85,7 @@ export class SortableListTransition {
       });
       if (typeof dummy.element === 'object')
         height += DOMStyle.getTotalVerticalDimension(dummy.element as HTMLElement);
-      const width  = this.group.offsetWidth;
+      const width = this.group.offsetWidth;
       this.group.style.boxSizing = 'border-box';
       this.group.style.width = `100%`;
       this.group.style.maxWidth = `${width}px`;
@@ -115,15 +95,12 @@ export class SortableListTransition {
 
   // 3) Prepare group and items for transition.
   public prepare() {
-    if (
-      this.isActive === true
-      && typeof this.baseModel === 'object'
-    ) {
+    if (this.isActive === true && typeof this.baseModel === 'object') {
       this.baseModel.forEach(({ item, left, top, width, height }) => {
         item.style.boxSizing = 'border-box';
         item.style.left = `${left}px`;
-        item.style.top  = `${top}px`;
-        item.style.width  = `${width}px`;
+        item.style.top = `${top}px`;
+        item.style.width = `${width}px`;
         item.style.height = `${height}px`;
         item.style.zIndex = '0';
         item.style.position = 'absolute';
@@ -135,10 +112,7 @@ export class SortableListTransition {
   public createTargetModel(target: HTMLElement | 'last'): TargetModel[] | false {
     const { dummy } = this.sortable;
 
-    if (
-      this.isActive === true
-      && typeof this.baseModel !== 'undefined'
-    ) {
+    if (this.isActive === true && typeof this.baseModel !== 'undefined') {
       // Make a copy from base model.
       const targetModel = this.baseModel.map(item => Object.assign({}, item));
 
@@ -169,18 +143,15 @@ export class SortableListTransition {
 
   // 5) Set correct values and sort targetModel.
   public prepareTargetModel(targetModel: TargetModel[]) {
-    if (
-      this.isActive === true
-      && typeof this.baseModel !== 'undefined'
-    ) {
+    if (this.isActive === true && typeof this.baseModel !== 'undefined') {
       let left = this.baseModel[0].left;
-      let top  = this.baseModel[0].top;
+      let top = this.baseModel[0].top;
       let previousVertical = 0;
       targetModel.forEach(model => {
         const vertical = DOMStyle.getTotalVerticalDimension(model.item);
         top = top + previousVertical;
         model.left = left;
-        model.top  = top;
+        model.top = top;
         previousVertical = vertical;
       });
       targetModel.sort((a, b) => a.top - b.top);
@@ -190,10 +161,7 @@ export class SortableListTransition {
   // 6) Begin transition.
   public transition(targetModel: TargetModel[], callback: Function) {
     const { config } = this.sortable;
-    if (
-      this.isActive === true
-      && typeof targetModel !== 'undefined'
-    ) {
+    if (this.isActive === true && typeof targetModel !== 'undefined') {
       this.isAnimating = true;
       targetModel.forEach(model => {
         model.item.style.transitionDuration = `${config.transitionDuration}ms`;
@@ -201,19 +169,15 @@ export class SortableListTransition {
         model.item.style.left = `${model.left}px`;
         model.item.style.top = `${model.top}px`;
       });
-      this.transitionTimeout = setTimeout(
-        () => {
-          callback();
-          this.isAnimating = false;
-        },
-        config.transitionDuration
-      );
+      this.transitionTimeout = setTimeout(() => {
+        callback();
+        this.isAnimating = false;
+      }, config.transitionDuration);
     }
   }
 
   public cleanup() {
-    if (DOMUtil.isHTMLElement(this.group) === true)
-      DOMStyle.clearStyles(this.group as HTMLElement);
+    if (DOMUtil.isHTMLElement(this.group) === true) DOMStyle.clearStyles(this.group as HTMLElement);
     if (typeof this.baseModel !== 'undefined')
       this.baseModel.forEach(item => {
         DOMStyle.clearStyles(item.item);

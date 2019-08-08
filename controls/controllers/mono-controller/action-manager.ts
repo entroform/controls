@@ -1,10 +1,6 @@
-import {
-  MonoTriggerMap,
-} from './config';
+import { MonoTriggerMap } from './config';
 
-import {
-  MonoController,
-} from './mono-controller';
+import { MonoController } from './mono-controller';
 
 export type MonoActionName = 'activate' | 'deactivate' | 'toggle';
 
@@ -31,9 +27,9 @@ export class ActionManager {
   private async activate(action: MonoAction): Promise<void> {
     const { config, itemManager } = this.controller;
     if (
-      itemManager.isActive === false
-      && itemManager.activeItem !== action.nextItem
-      && config.conditionActivate(action, this.controller) === true
+      itemManager.isActive === false &&
+      itemManager.activeItem !== action.nextItem &&
+      config.conditionActivate(action, this.controller) === true
     ) {
       await config.beforeActivate(action, this.controller);
       itemManager.activate(<HTMLElement>action.nextItem);
@@ -47,10 +43,11 @@ export class ActionManager {
     const { config, itemManager } = this.controller;
     if (itemManager.isActive === false) return Promise.resolve();
     if (
-      action.name === 'deactivate'
-      && typeof action.targetId === 'string'
-      && itemManager.activeItemId !== action.targetId
-    ) return Promise.resolve();
+      action.name === 'deactivate' &&
+      typeof action.targetId === 'string' &&
+      itemManager.activeItemId !== action.targetId
+    )
+      return Promise.resolve();
 
     if (config.conditionDeactivate(action, this.controller) === true) {
       await config.beforeDeactivate(action, this.controller);
@@ -63,10 +60,7 @@ export class ActionManager {
 
   private async completeAction(action: MonoAction): Promise<void> {
     const { itemManager } = this.controller;
-    if (
-      action.name === 'activate'
-      && itemManager.activeItemId !== action.targetId
-    ) {
+    if (action.name === 'activate' && itemManager.activeItemId !== action.targetId) {
       await this.deactivate(action);
       return this.activate(action);
     } else if (action.name === 'deactivate') {
@@ -117,9 +111,12 @@ export class ActionManager {
     return action;
   }
 
-  public async actionHub(action: MonoAction, isNestedAction: boolean = false, callback?: Function): Promise<void> {
-    if (this.isRunning === true && isNestedAction === true)
-      this.isNested = true;
+  public async actionHub(
+    action: MonoAction,
+    isNestedAction: boolean = false,
+    callback?: Function,
+  ): Promise<void> {
+    if (this.isRunning === true && isNestedAction === true) this.isNested = true;
 
     this.isRunning = true;
 
@@ -135,8 +132,8 @@ export class ActionManager {
             this.isNested = false;
             resolve();
           })
-          .catch(() => this.isNested = false);
-      })
+          .catch(() => (this.isNested = false));
+      });
     } else {
       preAction = Promise.resolve();
     }
@@ -145,10 +142,8 @@ export class ActionManager {
       await preAction;
       await this.completeAction(action);
       await this.endAction(callback);
-      if (isNestedAction === true && this.isNested === true)
-        this.isNested = false;
-      if (this.isNested === false)
-        config.afterAction(action, this.controller);
+      if (isNestedAction === true && this.isNested === true) this.isNested = false;
+      if (this.isNested === false) config.afterAction(action, this.controller);
     } catch {
       await this.endAction(callback);
       return Promise.reject();
@@ -158,16 +153,13 @@ export class ActionManager {
   public endAction(callback?: Function): Promise<void> {
     if (this.isNested === false)
       return new Promise(resolve => {
-        setTimeout(
-          () => {
-            this.isRunning = false;
-            resolve();
-          }, this.controller.config.cooldown
-        );
+        setTimeout(() => {
+          this.isRunning = false;
+          resolve();
+        }, this.controller.config.cooldown);
       });
 
-    if (this.isRunning === false && this.isNested === true)
-      this.isNested = false;
+    if (this.isRunning === false && this.isNested === true) this.isNested = false;
 
     if (typeof callback === 'function') callback();
 

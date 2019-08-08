@@ -1,22 +1,12 @@
-import {
-  DEFAULT_CONFIG,
-  SequenceConfig,
-} from './config'
+import { DEFAULT_CONFIG, SequenceConfig } from './config';
 
-import {
-  ItemManager,
-} from './item-manager'
+import { ItemManager } from './item-manager';
 
-import {
-  EventManager,
-} from './event-manager'
+import { EventManager } from './event-manager';
 
-import {
-  ActionManager,
-} from './action-manager'
+import { ActionManager } from './action-manager';
 
 export class SequenceController {
-
   public config: SequenceConfig;
 
   public itemManager: ItemManager;
@@ -50,8 +40,7 @@ export class SequenceController {
 
   public isItemActive(id: string): boolean {
     const { activeItem } = this.itemManager;
-    if (typeof activeItem == 'object')
-      return this.config.getItemId(activeItem) === id;
+    if (typeof activeItem == 'object') return this.config.getItemId(activeItem) === id;
     return false;
   }
 

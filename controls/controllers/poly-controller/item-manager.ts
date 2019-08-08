@@ -1,9 +1,6 @@
-import {
-  PolyController,
-} from './poly-controller';
+import { PolyController } from './poly-controller';
 
 export class ItemManager {
-
   private controller: PolyController;
 
   public items: HTMLElement[];
@@ -26,15 +23,15 @@ export class ItemManager {
   }
 
   public loadItemsFromConfig(): this {
-    const { config } = this.controller;      
+    const { config } = this.controller;
     if (
-      Array.isArray(config.items) === false
-      && NodeList.prototype.isPrototypeOf(config.items as NodeListOf<HTMLElement>)
+      Array.isArray(config.items) === false &&
+      NodeList.prototype.isPrototypeOf(config.items as NodeListOf<HTMLElement>)
     ) {
       this.items = Array.from(config.items as NodeListOf<HTMLElement>);
       return this;
     }
-    
+
     if (Array.isArray(config.items) === true) {
       this.items = config.items as HTMLElement[];
       return this;
@@ -55,8 +52,7 @@ export class ItemManager {
       return this;
     }
 
-    if (Array.isArray(items) === true)
-      this.items = items as HTMLElement[];
+    if (Array.isArray(items) === true) this.items = items as HTMLElement[];
     return this;
   }
 
@@ -90,11 +86,9 @@ export class ItemManager {
     const { config } = this.controller;
     let matchedItems: HTMLElement[] = [];
     this.items.forEach(item => {
-      if (config.getItemId(item) === id)
-        matchedItems.push(item);
+      if (config.getItemId(item) === id) matchedItems.push(item);
     });
-    if (matchedItems.length > 0)
-      return matchedItems[0];
+    if (matchedItems.length > 0) return matchedItems[0];
     return false;
   }
 
@@ -117,8 +111,7 @@ export class ItemManager {
     if (index !== -1) {
       config.deactivateItem(item, this.controller);
       this.activeItems.splice(index, 1);
-      if (this.activeItems.length === 0)
-        this.isActive = false;
+      if (this.activeItems.length === 0) this.isActive = false;
       return true;
     }
     return false;

@@ -1,9 +1,6 @@
-import {
-  MonoController,
-} from './mono-controller';
+import { MonoController } from './mono-controller';
 
 export class ItemManager {
-
   private controller: MonoController;
 
   public items: HTMLElement[];
@@ -29,13 +26,13 @@ export class ItemManager {
     const { config } = this.controller;
 
     if (
-      Array.isArray(config.items) === false
-      && NodeList.prototype.isPrototypeOf(config.items as NodeListOf<HTMLElement>)
+      Array.isArray(config.items) === false &&
+      NodeList.prototype.isPrototypeOf(config.items as NodeListOf<HTMLElement>)
     ) {
       this.items = Array.from(config.items as NodeListOf<HTMLElement>);
       return this;
     }
-    
+
     if (Array.isArray(config.items) === true) {
       this.items = config.items as HTMLElement[];
       return this;
@@ -56,15 +53,12 @@ export class ItemManager {
       return this;
     }
 
-    if (Array.isArray(items) === true)
-      this.items = items as HTMLElement[];
+    if (Array.isArray(items) === true) this.items = items as HTMLElement[];
     return this;
   }
 
   public filterItems(): this {
-    this.items = this.items.filter(
-      item => this.itemIsValid(item)
-    );
+    this.items = this.items.filter(item => this.itemIsValid(item));
     return this;
   }
 

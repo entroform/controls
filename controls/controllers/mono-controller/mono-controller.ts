@@ -1,22 +1,12 @@
-import {
-  DEFAULT_CONFIG,
-  MonoConfig,
-} from './config';
+import { DEFAULT_CONFIG, MonoConfig } from './config';
 
-import {
-  ItemManager,
-} from './item-manager';
+import { ItemManager } from './item-manager';
 
-import {
-  EventManager,
-} from './event-manager';
+import { EventManager } from './event-manager';
 
-import {
-  ActionManager,
-} from './action-manager';
+import { ActionManager } from './action-manager';
 
 export class MonoController {
-
   public config: MonoConfig;
 
   public itemManager: ItemManager;
@@ -50,10 +40,8 @@ export class MonoController {
 
   public isItemActive(id: string): boolean {
     const { isActive, activeItem } = this.itemManager;
-    if (
-      isActive === true
-      && typeof activeItem !== 'undefined'
-    ) return this.config.getItemId(activeItem) === id;
+    if (isActive === true && typeof activeItem !== 'undefined')
+      return this.config.getItemId(activeItem) === id;
     return false;
   }
 

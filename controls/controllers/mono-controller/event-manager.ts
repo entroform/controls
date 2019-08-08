@@ -1,19 +1,10 @@
-import {
-  DOMTraverse,
-  DragEventManager,
-} from '@nekobird/rocket';
+import { DOMTraverse, DragEventManager } from '@nekobird/rocket';
 
-import {
-  MonoController,
-} from './mono-controller';
+import { MonoController } from './mono-controller';
 
-import {
-  MonoActionName,
-} from './action-manager';
+import { MonoActionName } from './action-manager';
 
-import {
-  MonoTriggerMap,
-} from './config';
+import { MonoTriggerMap } from './config';
 
 export interface ActionConfigMapEntry {
   action: MonoActionName;
@@ -33,7 +24,7 @@ export class EventManager {
   }
 
   public initialize() {
-    this.dragEventManager.initialize()
+    this.dragEventManager.initialize();
     if (this.controller.config.listenToKeydown === true)
       window.addEventListener('keydown', this.eventHandlerKeydown);
   }
@@ -59,10 +50,7 @@ export class EventManager {
 
   private eventHub(trigger: HTMLElement, triggerMap: MonoTriggerMap): this {
     const { actionManager, isReady } = this.controller;
-    if (
-      isReady === true
-      && actionManager.isRunning === false
-    ) {
+    if (isReady === true && actionManager.isRunning === false) {
       actionManager.isRunning = true;
       const action = actionManager.composeActionFromTrigger(trigger, triggerMap);
       actionManager.actionHub(action);
@@ -72,32 +60,27 @@ export class EventManager {
 
   private handleOutsideAction = event => {
     const { config, actionManager, itemManager } = this.controller;
-    if (
-      config.deactivateOnOutsideAction === true
-      && actionManager.isRunning === false
-    ) {
+    if (config.deactivateOnOutsideAction === true && actionManager.isRunning === false) {
       const targetDownElement = event.getTargetElementFromData(event.downData);
       const targetUpElement = event.getTargetElementFromData(event.upData);
       if (
-        itemManager.isActive === true
-        && typeof itemManager.activeItem !== 'undefined'
-        && targetDownElement !== false
-        && targetUpElement !== false
-        && DOMTraverse.hasAncestor(targetDownElement, itemManager.activeItem) === false
-        && DOMTraverse.hasAncestor(targetUpElement, itemManager.activeItem) === false
-        && DOMTraverse.findAncestor(targetDownElement, config.isTrigger) === false
+        itemManager.isActive === true &&
+        typeof itemManager.activeItem !== 'undefined' &&
+        targetDownElement !== false &&
+        targetUpElement !== false &&
+        DOMTraverse.hasAncestor(targetDownElement, itemManager.activeItem) === false &&
+        DOMTraverse.hasAncestor(targetUpElement, itemManager.activeItem) === false &&
+        DOMTraverse.findAncestor(targetDownElement, config.isTrigger) === false
       ) {
         this.controller.deactivate();
         config.onOutsideAction(this.controller);
       }
     }
-  }
+  };
 
   private eventHandlerKeydown = (event: KeyboardEvent) => {
     const { config, actionManager } = this.controller;
-    if (
-      config.listenToKeydown  === true
-      && actionManager.isRunning === false
-    ) config.onKeydown(event, this.controller);
-  }
+    if (config.listenToKeydown === true && actionManager.isRunning === false)
+      config.onKeydown(event, this.controller);
+  };
 }

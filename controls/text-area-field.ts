@@ -1,7 +1,4 @@
-import {
-  DOMStyle,
-  TextBoxModel,
-} from '@nekobird/rocket';
+import { DOMStyle, TextBoxModel } from '@nekobird/rocket';
 
 export interface TextAreaFieldConfig {
   element?: HTMLTextAreaElement;
@@ -40,7 +37,7 @@ export class TextAreaField {
   public textBoxModel: TextBoxModel;
 
   public config: TextAreaFieldConfig;
-  
+
   public isInFocus: boolean = false;
   public previousKeyCode?: number;
 
@@ -48,7 +45,7 @@ export class TextAreaField {
     this.config = Object.assign({}, TEXTAREAFIELD_DEFAULT_CONFIG);
     this.setConfig(config);
 
-    this.textBoxModel = new TextBoxModel;
+    this.textBoxModel = new TextBoxModel();
   }
 
   public setConfig(config?: Partial<TextAreaFieldConfig>): this {
@@ -56,7 +53,9 @@ export class TextAreaField {
     if (TextAreaField.isHTMLTextAreaElement(this.config.element) === true) {
       return this;
     } else {
-      throw new Error('@nekobird/controls: TextAreaField: Element is undefined or is not a valid HTMLTextAreaElement.');
+      throw new Error(
+        '@nekobird/controls: TextAreaField: Element is undefined or is not a valid HTMLTextAreaElement.',
+      );
     }
   }
 
@@ -96,7 +95,7 @@ export class TextAreaField {
   }
 
   get isSingleLine(): boolean {
-    return (this.getHeight('') === this.getHeight());
+    return this.getHeight('') === this.getHeight();
   }
 
   get lineCount(): number {
@@ -117,7 +116,7 @@ export class TextAreaField {
     this.grow();
     return this;
   }
-  
+
   public grow(): this {
     const height = this.textBoxModel.getTextBoxHeightFromElement(this.config.element);
     const element = this.config.element as HTMLTextAreaElement;
@@ -132,8 +131,7 @@ export class TextAreaField {
     if (this.config.disableLineBreaks === true)
       element.value = element.value.replace(/[\r\n]+/g, '');
     // Remove tabs.
-    if (this.config.disableTabs === true)
-      element.value = element.value.replace(/[\t]+/g, '');
+    if (this.config.disableTabs === true) element.value = element.value.replace(/[\t]+/g, '');
     // Remove multiple whitespaces to one.
     if (this.config.removeMultipleWhitespaces === true)
       element.value = element.value.replace(/[\s]+/g, ' ');
@@ -142,9 +140,7 @@ export class TextAreaField {
       element.value = element.value.replace(/^[\s]+/g, '');
     // Trim element value if limit number of characters is a number.
     if (typeof this.config.limitNumberOfCharacters === 'number')
-      element.value = element.value.substring(
-        0, this.config.limitNumberOfCharacters
-      );
+      element.value = element.value.substring(0, this.config.limitNumberOfCharacters);
     // Replace tabs with spaces.
     // TODO: Fix this because it's not working as intended.
     // this.config.element.value = this.config.element.value.replace(/[\t]+/g, '    ')
@@ -156,17 +152,17 @@ export class TextAreaField {
   private handleBlur = () => {
     this.isInFocus = false;
     this.config.onBlur(this);
-  }
+  };
 
   private handleFocus = () => {
     this.isInFocus = true;
     this.config.onFocus(this);
-  }
+  };
 
   private handleInput = event => {
     this.filterAndGrow();
     this.config.onInput(this);
-  }
+  };
 
   private handleKeydown = event => {
     const keyCode = event.keyCode;
@@ -174,17 +170,14 @@ export class TextAreaField {
       this.insert('\t');
       event.preventDefault();
     }
-    if (
-      keyCode === 13
-      && this.config.disableLineBreaks === true
-    ) event.preventDefault();
+    if (keyCode === 13 && this.config.disableLineBreaks === true) event.preventDefault();
     this.previousKeyCode = keyCode;
-  }
+  };
 
   private handlePaste = event => {
     this.config.onPaste(this);
     this.filterAndGrow();
-  }
+  };
 
   // @listen
 
@@ -214,12 +207,12 @@ export class TextAreaField {
 
   public static isHTMLTextAreaElement(element): boolean {
     return (
-      typeof element === 'object'
-      && typeof element.nodeType === 'number'
-      && element.nodeType === 1
-      && typeof element.nodeName === 'string'
-      && element.nodeName === 'TEXTAREA'
-      && element instanceof HTMLTextAreaElement
+      typeof element === 'object' &&
+      typeof element.nodeType === 'number' &&
+      element.nodeType === 1 &&
+      typeof element.nodeName === 'string' &&
+      element.nodeName === 'TEXTAREA' &&
+      element instanceof HTMLTextAreaElement
     );
   }
 }

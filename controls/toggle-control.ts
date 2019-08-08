@@ -1,6 +1,4 @@
-import {
-  DOMUtil,
-} from '@nekobird/rocket';
+import { DOMUtil } from '@nekobird/rocket';
 
 export interface ToggleControlConfig {
   target?: HTMLElement;
@@ -32,8 +30,7 @@ export class ToggleControl {
     if (DOMUtil.isHTMLElement(this.config.target) === true) {
       const target = this.config.target as HTMLElement;
       const value = this.config.transformValue(target, this.isOn, this);
-      if (typeof value === 'undefined' || value === null)
-        return this.isOn;
+      if (typeof value === 'undefined' || value === null) return this.isOn;
       return value;
     }
   }
@@ -50,7 +47,7 @@ export class ToggleControl {
         this.config.onToggleControl(target, this.isOn, this);
       }
     }
-  }
+  };
 
   public listen() {
     if (DOMUtil.isHTMLElement(this.config.target) === true) {

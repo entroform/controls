@@ -1,22 +1,12 @@
-import {
-  DEFAULT_CONFIG,
-  PolyConfig,
-} from './config';
+import { DEFAULT_CONFIG, PolyConfig } from './config';
 
-import {
-  ItemManager,
-} from './item-manager';
+import { ItemManager } from './item-manager';
 
-import {
-  EventManager,
-} from './event-manager';
+import { EventManager } from './event-manager';
 
-import {
-  ActionManager,
-} from './action-manager';
+import { ActionManager } from './action-manager';
 
 export class PolyController {
-
   public isReady: boolean = false;
 
   public config: PolyConfig;
@@ -51,8 +41,7 @@ export class PolyController {
   public isItemActive(id: string): boolean {
     let isActive: boolean = false;
     this.itemManager.activeItems.forEach(item => {
-      if (this.config.getItemId(item) === id)
-        isActive = true;
+      if (this.config.getItemId(item) === id) isActive = true;
     });
     return isActive;
   }

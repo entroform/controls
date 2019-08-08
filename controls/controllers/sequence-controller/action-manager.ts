@@ -1,14 +1,8 @@
-import {
-  StringUtil,
-} from '@nekobird/rocket';
+import { StringUtil } from '@nekobird/rocket';
 
-import {
-  SequenceTriggerMap,
-} from './config';
+import { SequenceTriggerMap } from './config';
 
-import {
-  SequenceController,
-} from './sequence-controller';
+import { SequenceController } from './sequence-controller';
 
 export type SequenceActionName = 'previous' | 'next' | 'jump';
 
@@ -35,8 +29,8 @@ export class ActionManager {
     const { config, itemManager } = this.controller;
     const actionNameString = StringUtil.upperCaseFirstLetter(action.name);
     if (
-      itemManager.activeItem !== action.nextItem
-      && config[`condition${actionNameString}`](action, this) === true
+      itemManager.activeItem !== action.nextItem &&
+      config[`condition${actionNameString}`](action, this) === true
     ) {
       await config.beforeDeactivate(action, this.controller);
       this.deactivate();
@@ -57,7 +51,7 @@ export class ActionManager {
     return this;
   }
 
-  private activate({nextItem, nextItemIndex}: SequenceAction): this {
+  private activate({ nextItem, nextItemIndex }: SequenceAction): this {
     const { config, itemManager } = this.controller;
     if (typeof nextItem === 'object') {
       config.activateItem(nextItem, this.controller);
@@ -120,12 +114,14 @@ export class ActionManager {
 
   public composeAction(actionName: SequenceActionName, id?: string): SequenceAction {
     const action = this.createAction(actionName);
-    if (typeof id === 'string')
-      action.nextItemId = id;
+    if (typeof id === 'string') action.nextItemId = id;
     return action;
   }
 
-  public composeActionFromTrigger(trigger: HTMLElement, triggerMap: SequenceTriggerMap): SequenceAction {
+  public composeActionFromTrigger(
+    trigger: HTMLElement,
+    triggerMap: SequenceTriggerMap,
+  ): SequenceAction {
     const action = this.createAction(triggerMap.action);
     action.nextItemId = triggerMap.payload;
     action.trigger = trigger;
@@ -133,8 +129,7 @@ export class ActionManager {
   }
 
   public async actionHub(action: SequenceAction, isNestedAction: boolean = false): Promise<void> {
-    if (this.isRunning === true && isNestedAction === true)
-      this.isNested = true;
+    if (this.isRunning === true && isNestedAction === true) this.isNested = true;
 
     this.isRunning = true;
 
@@ -147,12 +142,13 @@ export class ActionManager {
     if (this.isNested === false) {
       preAction = new Promise(resolve => {
         this.isNested = true;
-        config.beforeAction(action, this.controller)
+        config
+          .beforeAction(action, this.controller)
           .then(() => {
             this.isNested = false;
             resolve();
           })
-          .catch(() => this.isNested = false);
+          .catch(() => (this.isNested = false));
       });
     } else {
       preAction = Promise.resolve();
@@ -162,10 +158,8 @@ export class ActionManager {
       await preAction;
       await this.completeAction(action);
       await this.endAction();
-      if (isNestedAction === true && this.isNested === true)
-        this.isNested = false;
-      if (this.isNested === false)
-        config.afterAction(action, this.controller);
+      if (isNestedAction === true && this.isNested === true) this.isNested = false;
+      if (this.isNested === false) config.afterAction(action, this.controller);
     } catch {
       await this.endAction();
       return Promise.reject();
@@ -175,16 +169,13 @@ export class ActionManager {
   public endAction(): Promise<void> {
     if (this.isNested === false) {
       return new Promise(resolve => {
-        setTimeout(
-          () => {
-            this.isRunning = false;
-            resolve();
-          }, this.controller.config.cooldown
-        );
+        setTimeout(() => {
+          this.isRunning = false;
+          resolve();
+        }, this.controller.config.cooldown);
       });
     }
-    if (this.isRunning === false && this.isNested === true)
-      this.isNested = false;
+    if (this.isRunning === false && this.isNested === true) this.isNested = false;
     return Promise.resolve();
   }
 }

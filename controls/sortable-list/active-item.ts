@@ -1,13 +1,6 @@
-import {
-  DOMPoint,
-  DOMRect,
-  DOMUtil,
-  Point,
-} from '@nekobird/rocket';
+import { DOMPoint, DOMRect, DOMUtil, Point } from '@nekobird/rocket';
 
-import {
-  SortableList
-} from './sortable-list';
+import { SortableList } from './sortable-list';
 
 export class ActiveItem {
   public sortable: SortableList;
@@ -23,10 +16,7 @@ export class ActiveItem {
   }
 
   public create(item: HTMLElement) {
-    if (
-      this.isActive === false
-      && DOMUtil.isHTMLElement(item) === true
-    ) {
+    if (this.isActive === false && DOMUtil.isHTMLElement(item) === true) {
       this.element = item;
       this.currentGroup = this.element.parentElement as HTMLElement;
       this.isActive = true;
@@ -34,13 +24,10 @@ export class ActiveItem {
   }
 
   public setInitialPointToItemOffset({ x, y }: Point) {
-    if (
-      this.isActive === true
-      && DOMUtil.isHTMLElement(this.element) === true
-    )
+    if (this.isActive === true && DOMUtil.isHTMLElement(this.element) === true)
       this.pointToItemOffset = DOMPoint.getElementOffsetFromPoint(
         this.element as HTMLElement,
-        new Point(x, y)
+        new Point(x, y),
       );
   }
 
@@ -53,10 +40,7 @@ export class ActiveItem {
         pointer,
       );
 
-      const to = Point.subtract(
-        pointerToGroupOffset,
-        this.pointToItemOffset as Point,
-      );
+      const to = Point.subtract(pointerToGroupOffset, this.pointToItemOffset as Point);
 
       config.moveItem(this.element as HTMLElement, to, this.sortable);
     }
@@ -65,10 +49,7 @@ export class ActiveItem {
   public updateCurrentGroup() {
     if (this.isActive === true) {
       const group = this.activeGroup;
-      if (
-        group !== false
-        && group !== this.currentGroup
-      ) {
+      if (group !== false && group !== this.currentGroup) {
         group.appendChild(this.element as HTMLElement);
         this.currentGroup = group;
       }
@@ -76,10 +57,7 @@ export class ActiveItem {
   }
 
   public destroy() {
-    if (
-      this.isActive === true
-      && DOMUtil.isHTMLElement(this.element)
-    ) {
+    if (this.isActive === true && DOMUtil.isHTMLElement(this.element)) {
       this.element = undefined;
       this.isActive = false;
     }
@@ -89,21 +67,18 @@ export class ActiveItem {
     const { isActive, elementManager } = this.sortable;
     const { groups } = elementManager;
     if (
-      isActive === true
-      && this.isActive === true
-      && typeof groups === 'object'
-      && Array.isArray(groups) === true
+      isActive === true &&
+      this.isActive === true &&
+      typeof groups === 'object' &&
+      Array.isArray(groups) === true
     ) {
       const areas: number[] = [];
       groups.forEach(group => {
-        const area = DOMRect.getOverlappingAreaFromElements(
-          this.element as HTMLElement, group
-        );
+        const area = DOMRect.getOverlappingAreaFromElements(this.element as HTMLElement, group);
         areas.push(area);
       });
       const index = areas.indexOf(Math.max(...areas));
-      if (DOMUtil.isHTMLElement(groups[index]) == true)
-        return groups[index];
+      if (DOMUtil.isHTMLElement(groups[index]) == true) return groups[index];
     }
     return false;
   }

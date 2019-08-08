@@ -1,10 +1,6 @@
-import {
-  DOMUtil
-} from '@nekobird/rocket';
+import { DOMUtil } from '@nekobird/rocket';
 
-import {
-  SortableList
-} from './sortable-list';
+import { SortableList } from './sortable-list';
 
 export class Dummy {
   public sortable: SortableList;
@@ -19,15 +15,12 @@ export class Dummy {
   public create() {
     const { isActive, activeItem, config } = this.sortable;
     if (
-      this.isActive === false
-      && isActive === true
-      && DOMUtil.isHTMLElement(activeItem.element) === true
+      this.isActive === false &&
+      isActive === true &&
+      DOMUtil.isHTMLElement(activeItem.element) === true
     ) {
       if (typeof this.element === 'undefined') {
-        this.element = config.createDummyFromItem(
-          activeItem.element as HTMLElement,
-          this.sortable,
-        );
+        this.element = config.createDummyFromItem(activeItem.element as HTMLElement, this.sortable);
         this.isActive = true;
       }
     }
@@ -36,10 +29,10 @@ export class Dummy {
   public prepare() {
     const { isActive, activeItem, config } = this.sortable;
     if (
-      this.isActive === true
-      && isActive === true
-      && DOMUtil.isHTMLElement(activeItem.element) === true
-      && DOMUtil.isHTMLElement(this.element) === true
+      this.isActive === true &&
+      isActive === true &&
+      DOMUtil.isHTMLElement(activeItem.element) === true &&
+      DOMUtil.isHTMLElement(this.element) === true
     ) {
       config.setDummyElementPropertiesFromItem(
         this.element as HTMLElement,
@@ -52,30 +45,22 @@ export class Dummy {
   public replaceWithActiveItem() {
     const { isActive, activeItem } = this.sortable;
     if (
-      this.isActive === true
-      && isActive === true
-      && DOMUtil.isHTMLElement(activeItem.element) === true
-      && DOMUtil.isHTMLElement(this.element) === true
+      this.isActive === true &&
+      isActive === true &&
+      DOMUtil.isHTMLElement(activeItem.element) === true &&
+      DOMUtil.isHTMLElement(this.element) === true
     ) {
       const parent = (this.element as HTMLElement).parentElement;
       if (parent !== null)
-        parent.replaceChild(
-          activeItem.element as HTMLElement,
-          this.element as HTMLElement,
-        );
+        parent.replaceChild(activeItem.element as HTMLElement, this.element as HTMLElement);
     }
   }
 
   public destroy() {
-    if (
-      this.isActive === true
-      && DOMUtil.isHTMLElement(this.element)
-    ) {
+    if (this.isActive === true && DOMUtil.isHTMLElement(this.element)) {
       const parent = (this.element as HTMLElement).parentElement;
-      if (parent !== null)
-        parent.removeChild(this.element as HTMLElement);
-      if (DOMUtil.isHTMLElement(this.element) === true)
-        (this.element as HTMLElement).remove();
+      if (parent !== null) parent.removeChild(this.element as HTMLElement);
+      if (DOMUtil.isHTMLElement(this.element) === true) (this.element as HTMLElement).remove();
       this.element = undefined;
       this.isActive = false;
     }

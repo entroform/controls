@@ -1,9 +1,4 @@
-import {
-  DOMTraverse,
-  DOMUtil,
-  Num,
-  PointerDragEventManager,
-} from '@nekobird/rocket';
+import { DOMTraverse, DOMUtil, Num, PointerDragEventManager } from '@nekobird/rocket';
 
 export interface MonoKnobSliderConfig {
   trackElement?: HTMLElement;
@@ -23,7 +18,7 @@ export interface MonoKnobSliderConfig {
   onUpdate: (slider: MonoKnobSlider) => void;
   moveKnob: (knob: HTMLElement, left: number) => void;
   updateHighlight: (highlight: HTMLElement, width: number, slider: MonoKnobSlider) => void;
-};
+}
 
 export const MONO_KNOB_SLIDER_DEFAULT_CONFIG: MonoKnobSliderConfig = {
   trackElement: undefined,
@@ -50,7 +45,6 @@ export const MONO_KNOB_SLIDER_DEFAULT_CONFIG: MonoKnobSliderConfig = {
 };
 
 export class MonoKnobSlider {
-
   public config: MonoKnobSliderConfig;
 
   public isActive: boolean = false;
@@ -133,7 +127,7 @@ export class MonoKnobSlider {
     if (DOMUtil.isHTMLElement(this.config.highlightElement) === true) {
       const highlightElement = this.config.highlightElement as HTMLElement;
       const { knobLeft, knobWidth, trackLeft } = this.getSliderRect();
-      const width = knobLeft - trackLeft + (knobWidth / 2);
+      const width = knobLeft - trackLeft + knobWidth / 2;
       this.config.updateHighlight(highlightElement, width, this);
     }
     this.config.onUpdate(this);
@@ -143,35 +137,36 @@ export class MonoKnobSlider {
     const range = this.config.range[1] - this.config.range[0];
     const remainder = range % this.config.interval;
     if (
-      this.config.useInterval === true
-      && typeof this.config.interval === 'number'
-      && this.config.interval !== 0
-      && this.config.interval < range
-      && this.config.interval > 0
-      && remainder === 0
+      this.config.useInterval === true &&
+      typeof this.config.interval === 'number' &&
+      this.config.interval !== 0 &&
+      this.config.interval < range &&
+      this.config.interval > 0 &&
+      remainder === 0
     ) {
       const valueRemainder = value % this.config.interval;
       const valueFloor = value - valueRemainder;
-      return (valueRemainder < this.config.interval / 2) ? valueFloor : valueFloor + this.config.interval;
+      return valueRemainder < this.config.interval / 2
+        ? valueFloor
+        : valueFloor + this.config.interval;
     }
     return value;
   }
 
   // TODO: Break this into two.
-  private eventHandlerStart = (pointerEvent) => {
+  private eventHandlerStart = pointerEvent => {
     if (
-      this.isDisabled === false
-      && this.isActive === false
-      && DOMUtil.isHTMLElement(this.config.knobElement) === true
-      && DOMUtil.isHTMLElement(this.config.trackElement) === true
+      this.isDisabled === false &&
+      this.isActive === false &&
+      DOMUtil.isHTMLElement(this.config.knobElement) === true &&
+      DOMUtil.isHTMLElement(this.config.trackElement) === true
     ) {
-
       const { trackRange, trackWidth, trackLeft, knobElement, knobWidth } = this.getSliderRect();
       const { position, target } = pointerEvent;
 
       if (
-        this.config.listenToKnobOnly === false
-        && pointerEvent.target === this.config.trackElement
+        this.config.listenToKnobOnly === false &&
+        pointerEvent.target === this.config.trackElement
       ) {
         // Check if pointer is at left edge.
         const pointerLeft = position.x - trackLeft;
@@ -180,12 +175,12 @@ export class MonoKnobSlider {
           this.currentValue = 0;
           this.config.moveKnob(knobElement, 0);
           this.onUpdate();
-        // Check if pointer is at right edge.
+          // Check if pointer is at right edge.
         } else if (pointerLeft <= trackWidth && pointerLeft >= trackWidth - halfKnobWidth) {
           this.currentValue = 1;
           this.config.moveKnob(knobElement, trackWidth - knobWidth);
           this.onUpdate();
-        // Check if pointer is in between
+          // Check if pointer is in between
         } else if (pointerLeft > halfKnobWidth && pointerLeft < trackWidth - halfKnobWidth) {
           let left = pointerLeft - halfKnobWidth;
 
@@ -200,11 +195,9 @@ export class MonoKnobSlider {
       }
 
       if (
-        this.config.listenToKnobOnly === false
-        || (
-          this.config.listenToKnobOnly === true
-          && DOMTraverse.hasAncestor(target, knobElement) !== false
-        )
+        this.config.listenToKnobOnly === false ||
+        (this.config.listenToKnobOnly === true &&
+          DOMTraverse.hasAncestor(target, knobElement) !== false)
       ) {
         const { knobLeft } = this.getSliderRect();
         this.isActive = true;
@@ -212,7 +205,7 @@ export class MonoKnobSlider {
         this.config.onActivate(this);
       }
     }
-  }
+  };
 
   private eventHandlerDrag = pointerEvent => {
     if (this.isActive === true) {
@@ -233,14 +226,14 @@ export class MonoKnobSlider {
       this.config.moveKnob(knobElement, left);
       this.onUpdate();
     }
-  }
+  };
 
   private eventHandlerEnd = () => {
     if (this.isActive === true) {
       this.config.onDeactivate(this);
       this.isActive = false;
     }
-  }
+  };
 
   public listen() {
     if (DOMUtil.isHTMLElement(this.config.trackElement) === true) {
