@@ -1,7 +1,4 @@
-import {
-  DOMStyle,
-  TextBoxModel,
-} from '@nekobird/rocket';
+import { DOMStyle, TextBoxModel } from '@nekobird/rocket';
 
 export interface TextAreaFieldConfig {
   element?: HTMLTextAreaElement;
@@ -40,7 +37,7 @@ export class TextAreaField {
   public textBoxModel: TextBoxModel;
 
   public config: TextAreaFieldConfig;
-  
+
   public isInFocus: boolean = false;
   public previousKeyCode?: number;
 
@@ -48,7 +45,7 @@ export class TextAreaField {
     this.config = Object.assign({}, TEXTAREAFIELD_DEFAULT_CONFIG);
     this.setConfig(config);
 
-    this.textBoxModel = new TextBoxModel;
+    this.textBoxModel = new TextBoxModel();
   }
 
   public setConfig(config?: Partial<TextAreaFieldConfig>): this {
@@ -59,7 +56,9 @@ export class TextAreaField {
     if (TextAreaField.isHTMLTextAreaElement(this.config.element) === true) {
       return this;
     } else {
-      throw new Error('@nekobird/controls: TextAreaField: Element is undefined or is not a valid HTMLTextAreaElement.');
+      throw new Error(
+        '@nekobird/controls: TextAreaField: Element is undefined or is not a valid HTMLTextAreaElement.',
+      );
     }
   }
 
@@ -104,7 +103,7 @@ export class TextAreaField {
   }
 
   get isSingleLine(): boolean {
-    return (this.getHeight('') === this.getHeight());
+    return this.getHeight('') === this.getHeight();
   }
 
   get lineCount(): number {
@@ -139,7 +138,7 @@ export class TextAreaField {
 
     return this;
   }
-  
+
   public grow(): this {
     let { element } = this.config;
 
@@ -198,19 +197,19 @@ export class TextAreaField {
     this.isInFocus = false;
 
     this.config.onBlur(this);
-  }
+  };
 
   private handleFocus = () => {
     this.isInFocus = true;
 
     this.config.onFocus(this);
-  }
+  };
 
   private handleInput = event => {
     this.filterAndGrow();
 
     this.config.onInput(this);
-  }
+  };
 
   private handleKeydown = event => {
     const { key } = event;
@@ -234,7 +233,7 @@ export class TextAreaField {
     this.config.onPaste(this);
 
     this.filterAndGrow();
-  }
+  };
 
   // @listen
 

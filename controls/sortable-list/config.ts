@@ -1,19 +1,13 @@
-import {
-  DOMStyle,
-  DragEventManager,
-  Point,
-} from '@nekobird/rocket';
+import { DOMStyle, DragEventManager, Point } from '@nekobird/rocket';
 
-import {
-  SortableList,
-} from './sortable-list';
+import { SortableList } from './sortable-list';
 
 export interface SortableListConfig {
   useTransition: boolean;
   transitionDuration: number;
   transitionTimingFunction: string;
 
-  leftMouseButtonOnly: boolean,
+  leftMouseButtonOnly: boolean;
 
   disableTouchEventsWhileActive: boolean;
 
@@ -27,14 +21,23 @@ export interface SortableListConfig {
   prepareItems: (item: HTMLElement) => void;
 
   createDummyFromItem: (item: HTMLElement, context: SortableList) => HTMLElement;
-  setDummyElementPropertiesFromItem: (dummyElement: HTMLElement, item: HTMLElement, context: SortableList) => void;
+  setDummyElementPropertiesFromItem: (
+    dummyElement: HTMLElement,
+    item: HTMLElement,
+    context: SortableList,
+  ) => void;
 
   activateOnLongPress: boolean;
   listenToLongPress: boolean;
   longPressWait: number;
-  longPressCondition: (event, manager: DragEventManager, context: SortableList) => boolean,
+  longPressCondition: (event, manager: DragEventManager, context: SortableList) => boolean;
 
-  condition: (item: HTMLElement, event, manager: DragEventManager, context: SortableList) => boolean;
+  condition: (
+    item: HTMLElement,
+    event,
+    manager: DragEventManager,
+    context: SortableList,
+  ) => boolean;
 
   beforeActivate: (context: SortableList) => void;
   beforeDeactivate: (context: SortableList) => void;
@@ -64,7 +67,6 @@ export const SORTABLE_DEFAULT_CONFIG: SortableListConfig = {
   transitionDuration: 150,
   transitionTimingFunction: 'ease-out',
 
-
   leftMouseButtonOnly: true,
 
   disableTouchEventsWhileActive: true,
@@ -91,7 +93,7 @@ export const SORTABLE_DEFAULT_CONFIG: SortableListConfig = {
     DOMStyle.copyStylesFrom(
       item,
       ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'],
-      dummy
+      dummy,
     );
   },
 

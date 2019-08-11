@@ -1,18 +1,8 @@
-import {
-  AfterActionCallback,
-  BeforeActionCallback,
-  ConditionHook,
-  Hook,
-} from '../index';
+import { AfterActionCallback, BeforeActionCallback, ConditionHook, Hook } from '../index';
 
-import {
-  SequenceController,
-} from './sequence-controller';
+import { SequenceController } from './sequence-controller';
 
-import {
-  SequenceAction,
-  SequenceActionName,
-} from './action-manager';
+import { SequenceAction, SequenceActionName } from './action-manager';
 
 export interface SequenceTriggerMap {
   trigger: HTMLElement;
@@ -79,7 +69,7 @@ export const DEFAULT_CONFIG: SequenceConfig = {
     }
     return false;
   },
-  getItemId: item => typeof item.dataset.id === 'string' ? item.dataset.id : false,
+  getItemId: item => (typeof item.dataset.id === 'string' ? item.dataset.id : false),
 
   conditionPrevious: () => true,
   conditionNext: () => true,

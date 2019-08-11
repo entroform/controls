@@ -1,18 +1,8 @@
-import {
-  AfterActionCallback,
-  BeforeActionCallback,
-  ConditionHook,
-  Hook,
-} from '../index';
+import { AfterActionCallback, BeforeActionCallback, ConditionHook, Hook } from '../index';
 
-import {
-  MonoAction,
-  MonoActionName,
-} from './action-manager';
+import { MonoAction, MonoActionName } from './action-manager';
 
-import {
-  MonoController,
-} from './mono-controller';
+import { MonoController } from './mono-controller';
 
 export interface MonoTriggerMap {
   trigger: HTMLElement;
@@ -25,7 +15,7 @@ export interface MonoConfig {
 
   listenToKeydown: boolean;
   deactivateOnOutsideAction: boolean;
-  
+
   // TODO: Maybe add string selector support.
   items: NodeListOf<HTMLElement> | HTMLElement[];
 
@@ -83,7 +73,7 @@ export const DEFAULT_CONFIG: MonoConfig = {
     }
     return false;
   },
-  getItemId: item => typeof item.dataset.id === 'string' ? item.dataset.id : false,
+  getItemId: item => (typeof item.dataset.id === 'string' ? item.dataset.id : false),
 
   conditionActivate: () => true,
   conditionDeactivate: () => true,

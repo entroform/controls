@@ -7,8 +7,12 @@ import {
 } from './poly-controller';
 
 export type PolyActionName =
-  'activate' | 'activate-all' | 'deactivate' |
-  'deactivate-all' | 'toggle' | 'toggle-all';
+  'activate'
+  | 'activate-all'
+  | 'deactivate'
+  | 'deactivate-all'
+  | 'toggle'
+  | 'toggle-all';
 
 export interface PolyAction {
   name: PolyActionName;
@@ -28,47 +32,60 @@ export class ActionManager {
   }
 
   private activateItem({ targetItem }: PolyAction) {
-    if (typeof targetItem === 'object')
+    if (typeof targetItem === 'object') {
       this.controller.itemManager.activate(targetItem);
+    }
   }
 
   private deactivateItem({ targetItem }: PolyAction) {
-    if (typeof targetItem === 'object')
+    if (typeof targetItem === 'object') {
       this.controller.itemManager.deactivate(targetItem);
+    }
   }
 
   private async handleActionActivate(action: PolyAction): Promise<void> {
     const { config } = this.controller;
+
     if (
       typeof action.targetItem === 'object'
       && config.itemIsActive(action.targetItem, this.controller) === false
       && config.conditionActivate(action, this.controller) === true
     ) {
       await config.beforeActivate(action, this.controller);
+
       this.activateItem(action);
+
       config.afterActivate(action, this.controller);
+
       return Promise.resolve();
     }
+
     return Promise.reject();
   }
 
   private async handleActionDeactivate(action: PolyAction): Promise<void> {
     const { config } = this.controller;
+
     if (
       typeof action.targetItem === 'object'
       && config.itemIsActive(action.targetItem, this.controller) === true
       && config.conditionDeactivate(action, this.controller) === true
     ) {
       await config.beforeDeactivate(action, this.controller);
+
       this.deactivateItem(action);
+
       config.afterDeactivate(action, this.controller);
+
       return Promise.resolve();
     }
+
     return Promise.reject();
   }
 
   private handleActionToggle(action: PolyAction): Promise<void> {
     const { config } = this.controller;
+
     if (config.conditionToggle(action, this.controller) === true) {
       if (
         typeof action.targetItem === 'object'
@@ -79,82 +96,97 @@ export class ActionManager {
         return this.handleActionDeactivate(action);
       }
     }
+
     return Promise.resolve();
   }
 
   private handleActionActivateAll(action: PolyAction): Promise<void> {
     const { config, itemManager } = this.controller;
+
     if (
       config.conditionActivateAll(action, this.controller) === true
       && itemManager.items.length > 0
     ) {
       const actionPromises: Promise<void>[] = [];
+
       itemManager.items.forEach(item => {
         if (config.itemIsActive(item, this.controller) === false) {
-          const subAction: PolyAction = Object.assign({
-            targetItem: item,
-            targetId: config.getItemId(item),
-          }, action);
+          const subAction: PolyAction = Object.assign(
+            {
+              targetItem: item,
+              targetId: config.getItemId(item),
+            },
+            action,
+          );
+
           actionPromises.push(this.handleActionActivate(subAction));
         }
       });
-      return Promise
-        .all(actionPromises)
-        .then(() => Promise.resolve());
+
+      return Promise.all(actionPromises).then(() => Promise.resolve());
     }
+
     return Promise.reject();
   }
 
   private handleActionDeactivateAll(action: PolyAction): Promise<void> {
     const { config, itemManager } = this.controller;
+
     if (
       config.conditionActivateAll(action, this.controller) === true
       && itemManager.items.length > 0
     ) {
       const actionPromises: Promise<void>[] = [];
+
       itemManager.items.forEach(item => {
         if (config.itemIsActive(item, this.controller) === true) {
-          const subAction: PolyAction = Object.assign({
-            targetItem: item,
-            targetId: config.getItemId(item),
-          }, action);
-          actionPromises.push(
-            this.handleActionDeactivate(subAction)
+          const subAction: PolyAction = Object.assign(
+            {
+              targetItem: item,
+              targetId: config.getItemId(item),
+            },
+            action,
           );
+
+          actionPromises.push(this.handleActionDeactivate(subAction));
         }
       });
-      return Promise
-        .all(actionPromises)
-        .then(() => Promise.resolve());
+
+      return Promise.all(actionPromises).then(() => Promise.resolve());
     }
+
     return Promise.reject();
   }
 
   private handleActionToggleAll(action: PolyAction): Promise<void> {
     const { config, itemManager } = this.controller;
+
     if (
       config.conditionActivateAll(action, this.controller) === true
       && itemManager.items.length > 0
     ) {
       const actionPromises: Promise<void>[] = [];
+
       itemManager.items.forEach(item => {
-        const subAction: PolyAction = Object.assign({
-          targetItem: item,
-          targetId: config.getItemId(item),
-        }, action);
-        actionPromises.push(
-          this.handleActionToggle(subAction)
+        const subAction: PolyAction = Object.assign(
+          {
+            targetItem: item,
+            targetId: config.getItemId(item),
+          },
+          action,
         );
+
+        actionPromises.push(this.handleActionToggle(subAction));
       });
-      return Promise
-        .all(actionPromises)
-        .then(() => Promise.resolve());
+
+      return Promise.all(actionPromises).then(() => Promise.resolve());
     }
+
     return Promise.reject();
   }
 
   private handleAction(action: PolyAction): Promise<void> {
-    switch(action.name) {
+    switch (action.name) {
       case 'activate':
         return this.handleActionActivate(action);
       case 'deactivate':
@@ -184,22 +216,33 @@ export class ActionManager {
 
       if (targetItem !== false) {
         action.targetId = id;
+
         action.targetItem = targetItem;
       }
     }
+
     return action;
   }
 
   public composeActionFromTrigger(trigger: HTMLElement, triggerMap: PolyTriggerMap): PolyAction {
     const whitelist = ['activate', 'deactivate', 'toggle'];
-    if (whitelist.indexOf(triggerMap.action) !== -1)
+
+    if (whitelist.indexOf(triggerMap.action) !== -1) {
       return this.composeAction(triggerMap.action, triggerMap.payload);
+    }
+
     return this.composeAction(triggerMap.action);
   }
 
-  public async actionHub(action: PolyAction, isNestedAction: boolean = false, callback?: Function): Promise<void> {
-    if (this.isRunning === true && isNestedAction === true)
+  public async actionHub(
+    action: PolyAction,
+    isNestedAction: boolean = false,
+    callback?: Function,
+  ): Promise<void> {
+    if (this.isRunning === true && isNestedAction === true) {
       this.isNested = true;
+    }
+
     this.isRunning = true;
 
     const { config } = this.controller;
@@ -215,38 +258,57 @@ export class ActionManager {
             this.isNested = false;
             resolve();
           })
-          .catch(() => this.isNested = false);
+          .catch(() => (this.isNested = false));
       });
     } else {
       preAction = Promise.resolve();
     }
+
     try {
       await preAction;
+
       await this.handleAction(action);
+
       await this.endAction(callback);
-      if (isNestedAction === true && this.isNested === true)
+
+      if (
+        isNestedAction === true
+        && this.isNested === true
+      ) {
         this.isNested = false;
-      if (this.isNested === false)
+      }
+
+      if (this.isNested === false) {
         config.afterAction(action, this.controller);
+      }
     } catch {
       await this.endAction(callback);
+
       return Promise.reject();
     }
   }
 
   public endAction(callback?: Function): Promise<void> {
-    if (this.isNested === false)
+    if (this.isNested === false) {
       return new Promise(resolve => {
-        setTimeout(
-          () => {
-            this.isRunning = false;
-            resolve();
-          }, this.controller.config.cooldown
-        );
+        setTimeout(() => {
+          this.isRunning = false;
+          resolve();
+        }, this.controller.config.cooldown);
       });
-    if (this.isRunning === false && this.isNested === true)
+    }
+
+    if (
+      this.isRunning === false
+      && this.isNested === true
+    ) {
       this.isNested = false;
-    if (typeof callback === 'function') callback();
+    }
+
+    if (typeof callback === 'function') {
+      callback();
+    }
+
     return Promise.resolve();
   }
 }

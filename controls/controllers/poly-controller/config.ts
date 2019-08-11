@@ -1,17 +1,8 @@
-import {
-  AfterActionCallback,
-  BeforeActionCallback,
-  ConditionHook,
-} from '../index';
+import { AfterActionCallback, BeforeActionCallback, ConditionHook } from '../index';
 
-import {
-  PolyController,
-} from './poly-controller';
+import { PolyController } from './poly-controller';
 
-import {
-  PolyAction,
-  PolyActionName,
-} from './action-manager';
+import { PolyAction, PolyActionName } from './action-manager';
 
 export interface PolyTriggerMap {
   trigger: HTMLElement;
@@ -104,7 +95,7 @@ export const DEFAULT_CONFIG: PolyConfig = {
     }
     return false;
   },
-  getItemId: item => typeof item.dataset.id === 'string' ? item.dataset.id : false,
+  getItemId: item => (typeof item.dataset.id === 'string' ? item.dataset.id : false),
 
   conditionActivate: () => true,
   conditionDeactivate: () => true,
@@ -126,7 +117,7 @@ export const DEFAULT_CONFIG: PolyConfig = {
 
   beforeAction: () => Promise.resolve(),
   afterAction: () => Promise.resolve(),
-  
+
   onOutsideAction: () => {},
   onKeydown: () => {},
 };

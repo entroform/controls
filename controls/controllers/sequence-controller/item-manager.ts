@@ -1,6 +1,4 @@
-import {
-  SequenceController,
-} from './sequence-controller';
+import { SequenceController } from './sequence-controller';
 
 export class ItemManager {
   private controller: SequenceController;
@@ -21,19 +19,19 @@ export class ItemManager {
     this.loadItemsFromConfig();
     this.filterItems();
     this.filterActiveItems();
-    return this
+    return this;
   }
 
   public loadItemsFromConfig(): this {
     const { config } = this.controller;
     if (
-      Array.isArray(config.items) === false
-      && NodeList.prototype.isPrototypeOf(config.items as NodeListOf<HTMLElement>)
+      Array.isArray(config.items) === false &&
+      NodeList.prototype.isPrototypeOf(config.items as NodeListOf<HTMLElement>)
     ) {
       this.items = Array.from(config.items as NodeListOf<HTMLElement>);
       return this;
     }
-    
+
     if (Array.isArray(config.items) === true) {
       this.items = config.items as HTMLElement[];
       return this;
@@ -68,8 +66,7 @@ export class ItemManager {
   public itemIsValid(item: HTMLElement): boolean {
     const { config } = this.controller;
     let valid: boolean = true;
-    if (typeof config.getItemId(item) !== 'string')
-      valid = false;
+    if (typeof config.getItemId(item) !== 'string') valid = false;
     return valid;
   }
 
@@ -77,11 +74,9 @@ export class ItemManager {
     const { config } = this.controller;
     let matchedItems: HTMLElement[] = [];
     this.items.forEach(item => {
-      if (config.getItemId(item) === id)
-        matchedItems.push(item);
+      if (config.getItemId(item) === id) matchedItems.push(item);
     });
-    if (matchedItems.length > 0)
-      return matchedItems[0];
+    if (matchedItems.length > 0) return matchedItems[0];
     return false;
   }
 }

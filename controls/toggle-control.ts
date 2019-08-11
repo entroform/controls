@@ -63,7 +63,7 @@ export class ToggleControl {
         this.config.onToggleControl(target, this.isOn, this);
       }
     }
-  }
+  };
 
   public listen() {
     let { target } = this.config;

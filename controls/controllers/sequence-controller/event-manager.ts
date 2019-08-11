@@ -1,19 +1,10 @@
-import {
-  DOMTraverse,
-  DragEventManager,
-} from '@nekobird/rocket';
+import { DOMTraverse, DragEventManager } from '@nekobird/rocket';
 
-import {
-  SequenceController,
-} from './sequence-controller';
+import { SequenceController } from './sequence-controller';
 
-import {
-  SequenceTriggerMap,
-} from './config';
+import { SequenceTriggerMap } from './config';
 
-import {
-  SequenceActionName,
-} from './action-manager';
+import { SequenceActionName } from './action-manager';
 
 export interface ActionConfigMapEntry {
   configProperty: string;
@@ -33,7 +24,7 @@ export class EventManager {
   }
 
   public initialize(): this {
-    this.dragEventManager.initialize()
+    this.dragEventManager.initialize();
     if (this.controller.config.listenToKeydown === true)
       window.addEventListener('keydown', this.eventHandlerKeydown);
     return this;
@@ -54,14 +45,11 @@ export class EventManager {
     if (triggerMap === false) return;
 
     this.eventHub(trigger as HTMLElement, triggerMap);
-  }
+  };
 
   private eventHub(trigger: HTMLElement, triggerMap: SequenceTriggerMap): this {
     const { actionManager, isReady } = this.controller;
-    if (
-      isReady === true
-      && actionManager.isRunning === false
-    ) {
+    if (isReady === true && actionManager.isRunning === false) {
       actionManager.isRunning = true;
       const action = actionManager.composeActionFromTrigger(trigger, triggerMap);
       actionManager.actionHub(action);
@@ -71,9 +59,7 @@ export class EventManager {
 
   private eventHandlerKeydown = (event: KeyboardEvent) => {
     const { config, actionManager } = this.controller;
-    if (
-      config.listenToKeydown === true
-      && actionManager.isRunning === false
-    ) config.onKeydown(event, this.controller);
-  }
+    if (config.listenToKeydown === true && actionManager.isRunning === false)
+      config.onKeydown(event, this.controller);
+  };
 }

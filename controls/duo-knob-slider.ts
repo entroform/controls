@@ -22,8 +22,13 @@ export interface DuoKnobSliderConfig {
   onDeactivate: (slider: DuoKnobSlider) => void;
   onUpdate: (slider: DuoKnobSlider) => void;
   moveKnob: (knob: HTMLElement, left: number) => void;
-  updateHighlight: (highlight: HTMLElement, left: number, width: number, slider: DuoKnobSlider) => void;
-};
+  updateHighlight: (
+    highlight: HTMLElement,
+    left: number,
+    width: number,
+    slider: DuoKnobSlider,
+  ) => void;
+}
 
 export const DUO_KNOB_SLIDER_DEFAULT_CONFIG: DuoKnobSliderConfig = {
   trackElement: undefined,
@@ -41,7 +46,7 @@ export const DUO_KNOB_SLIDER_DEFAULT_CONFIG: DuoKnobSliderConfig = {
   onActivate: () => {},
   onDeactivate: () => {},
   onUpdate: () => {},
-  moveKnob: (knob, left) => knob.style.transform = `translateX(${left}px)`,
+  moveKnob: (knob, left) => (knob.style.transform = `translateX(${left}px)`),
   updateHighlight: (highlight, left, width, slider) => {
     highlight.style.transform = `translateX(${left}px)`;
     highlight.style.width = `${width}px`;
@@ -49,7 +54,6 @@ export const DUO_KNOB_SLIDER_DEFAULT_CONFIG: DuoKnobSliderConfig = {
 };
 
 export class DuoKnobSlider {
-
   public config: DuoKnobSliderConfig;
 
   public isActive: boolean = false;
@@ -93,7 +97,12 @@ export class DuoKnobSlider {
   }
 
   public set value(value: [number, number]) {
-    const { knobOneTrackRange, knobOneElement, knobTwoTrackRange, knobTwoElement } = this.getSliderRect();
+    const {
+      knobOneTrackRange,
+      knobOneElement,
+      knobTwoTrackRange,
+      knobTwoElement,
+    } = this.getSliderRect();
 
     const computedMinValue = this.offsetInterval(value[0]);
     const computedMaxValue = this.offsetInterval(value[1]);
@@ -159,12 +168,12 @@ export class DuoKnobSlider {
     const remainder = range % this.config.interval;
 
     if (
-      this.config.useInterval === true
-      && typeof this.config.interval === 'number'
-      && this.config.interval !== 0
-      && this.config.interval < range
-      && this.config.interval > 0
-      && remainder === 0
+      this.config.useInterval === true &&
+      typeof this.config.interval === 'number' &&
+      this.config.interval !== 0 &&
+      this.config.interval < range &&
+      this.config.interval > 0 &&
+      remainder === 0
     ) {
       const valueRemainder = value % this.config.interval;
 
@@ -186,11 +195,11 @@ export class DuoKnobSlider {
     const knobOneElement = this.config.knobOneElement as HTMLElement;
 
     if (
-      this.isDisabled === false
-      && this.knobOneIsActive === false
-      && DOMUtil.isHTMLElement(this.config.trackElement) === true
-      && DOMUtil.isHTMLElement(this.config.knobOneElement) === true
-      && DOMTraverse.hasAncestor(target, knobOneElement)
+      this.isDisabled === false &&
+      this.knobOneIsActive === false &&
+      DOMUtil.isHTMLElement(this.config.trackElement) === true &&
+      DOMUtil.isHTMLElement(this.config.knobOneElement) === true &&
+      DOMTraverse.hasAncestor(target, knobOneElement)
     ) {
       this.isActive = true;
 
@@ -202,7 +211,7 @@ export class DuoKnobSlider {
 
       this.config.onActivate(this);
     }
-  }
+  };
 
   private knobTwoEventHandlerStart = pointerEvent => {
     const { position, target } = pointerEvent;
@@ -210,11 +219,11 @@ export class DuoKnobSlider {
     const knobTwoElement = this.config.knobTwoElement as HTMLElement;
 
     if (
-      this.isDisabled === false
-      && this.knobTwoIsActive === false
-      && DOMUtil.isHTMLElement(this.config.trackElement) === true
-      && DOMUtil.isHTMLElement(this.config.knobTwoElement) === true
-      && DOMTraverse.hasAncestor(target,knobTwoElement)
+      this.isDisabled === false &&
+      this.knobTwoIsActive === false &&
+      DOMUtil.isHTMLElement(this.config.trackElement) === true &&
+      DOMUtil.isHTMLElement(this.config.knobTwoElement) === true &&
+      DOMTraverse.hasAncestor(target, knobTwoElement)
     ) {
       this.isActive = true;
 
@@ -226,7 +235,7 @@ export class DuoKnobSlider {
 
       this.config.onActivate(this);
     }
-  }
+  };
 
   private knobOneEventHandlerDrag = pointerEvent => {
     if (this.knobOneIsActive === true) {
@@ -256,7 +265,7 @@ export class DuoKnobSlider {
  
       this.onUpdate()
     }
-  }
+  };
 
   private knobTwoEventHandlerDrag = pointerEvent => {
     if (this.knobTwoIsActive === true) {
@@ -286,7 +295,7 @@ export class DuoKnobSlider {
 
       this.onUpdate()
     }
-  }
+  };
 
   private knobOneEventHandlerEnd = () => {
     if (this.knobOneIsActive === true) {
@@ -296,7 +305,7 @@ export class DuoKnobSlider {
 
       this.checkIfActive();
     }
-  }
+  };
 
   private knobTwoEventHandlerEnd = () => {
     if (this.knobTwoIsActive === true) {
@@ -306,7 +315,7 @@ export class DuoKnobSlider {
 
       this.checkIfActive();
     }
-  }
+  };
 
   private checkIfActive() {
     if (
