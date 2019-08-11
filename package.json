@@ -27,7 +27,7 @@
   },
   "browserslist": "> 1%, not dead",
   "dependencies": {
-    "@nekobird/rocket": "0.0.115"
+    "@nekobird/rocket": "0.0.118"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

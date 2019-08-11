@@ -21,19 +21,28 @@ export class ToggleControl {
 
   constructor(config: Partial<ToggleControlConfig>) {
     this.config = Object.assign({}, TOGGLE_CONTROL_DEFAULT_CONFIG);
+
     this.setConfig(config);
   }
 
   public setConfig(config: Partial<ToggleControlConfig>) {
-    if (typeof config === 'object') Object.assign(this.setConfig, config);
+    if (typeof config === 'object') {
+      Object.assign(this.setConfig, config);
+    }
   }
 
   public get value() {
-    if (DOMUtil.isHTMLElement(this.config.target) === true) {
-      const target = this.config.target as HTMLElement;
+    let { target } = this.config;
+
+    if (DOMUtil.isHTMLElement(target) === true) {
+      target = target as HTMLElement;
+
       const value = this.config.transformValue(target, this.isOn, this);
-      if (typeof value === 'undefined' || value === null)
+
+      if (typeof value === 'undefined' || value === null) {
         return this.isOn;
+      }
+
       return value;
     }
   }
@@ -44,17 +53,24 @@ export class ToggleControl {
 
   private clickHandler = event => {
     if (this.isDisabled === false) {
-      if (DOMUtil.isHTMLElement(this.config.target) === true) {
-        const target = this.config.target as HTMLElement;
+      let { target } = this.config;
+
+      if (DOMUtil.isHTMLElement(target) === true) {
+        target = target as HTMLElement;
+
         this.toggle();
+
         this.config.onToggleControl(target, this.isOn, this);
       }
     }
   }
 
   public listen() {
-    if (DOMUtil.isHTMLElement(this.config.target) === true) {
-      const target = this.config.target as HTMLElement;
+    let { target } = this.config;
+
+    if (DOMUtil.isHTMLElement(target) === true) {
+      target = target as HTMLElement;
+
       target.addEventListener('click', this.clickHandler);
     }
   }

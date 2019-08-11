@@ -98,8 +98,10 @@ export class InputActiveManager {
       let containerElement = DOMTraverse.findAncestorWithClass(
         input, this.config.containerClassName, false
       );
+
       if (containerElement !== false) {
         containerElement = containerElement as HTMLElement;
+
         if (this.config.conditionActivate(containerElement, input) === true) {
           if (this.isActive(containerElement) === false)
             this.activate(containerElement, input);

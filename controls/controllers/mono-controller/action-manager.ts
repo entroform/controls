@@ -30,44 +30,61 @@ export class ActionManager {
 
   private async activate(action: MonoAction): Promise<void> {
     const { config, itemManager } = this.controller;
+
     if (
       itemManager.isActive === false
       && itemManager.activeItem !== action.nextItem
       && config.conditionActivate(action, this.controller) === true
     ) {
       await config.beforeActivate(action, this.controller);
+
       itemManager.activate(<HTMLElement>action.nextItem);
+
       config.afterActivate(action, this.controller);
+
       return Promise.resolve();
     }
+
     return Promise.reject();
   }
 
   private async deactivate(action: MonoAction): Promise<void> {
     const { config, itemManager } = this.controller;
-    if (itemManager.isActive === false) return Promise.resolve();
+
+    if (itemManager.isActive === false) {
+      return Promise.resolve();
+    }
+
     if (
       action.name === 'deactivate'
       && typeof action.targetId === 'string'
       && itemManager.activeItemId !== action.targetId
-    ) return Promise.resolve();
+    ) {
+      return Promise.resolve();
+    }
 
     if (config.conditionDeactivate(action, this.controller) === true) {
       await config.beforeDeactivate(action, this.controller);
+
       itemManager.deactivate();
+
       config.afterDeactivate(action, this.controller);
+
       return Promise.resolve();
     }
+
     return Promise.reject();
   }
 
   private async completeAction(action: MonoAction): Promise<void> {
     const { itemManager } = this.controller;
+
     if (
       action.name === 'activate'
       && itemManager.activeItemId !== action.targetId
     ) {
       await this.deactivate(action);
+
       return this.activate(action);
     } else if (action.name === 'deactivate') {
       return this.deactivate(action);
@@ -76,9 +93,11 @@ export class ActionManager {
         return this.deactivate(action);
       } else {
         await this.deactivate(action);
+
         return this.activate(action);
       }
     }
+
     return Promise.reject();
   }
 

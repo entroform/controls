@@ -69,28 +69,37 @@ export class MonoKnobSlider {
     this.pointerDragEventManager = new PointerDragEventManager();
 
     this.config.onInit(this);
+
     this.update();
+
     this.onUpdate();
+
     this.listen();
   }
 
   public setConfig(config: Partial<MonoKnobSliderConfig>) {
-    if (typeof config === 'object') Object.assign(this.config, config);
+    if (typeof config === 'object') {
+      Object.assign(this.config, config);
+    }
   }
 
   public set value(value: number) {
     const { trackRange, knobElement } = this.getSliderRect();
 
     const computedValue = this.offsetInterval(value);
+
     const left = Num.modulate(computedValue, this.config.range, trackRange, true);
+
     this.currentValue = Num.modulate(computedValue, this.config.range, 1, true);
 
     this.config.moveKnob(knobElement, left);
+
     this.onUpdate();
   }
 
   public get value(): number {
     const value = Num.modulate(this.currentValue, 1, this.config.range, true);
+
     return this.offsetInterval(value);
   }
 
@@ -120,28 +129,39 @@ export class MonoKnobSlider {
     const { trackRange, knobElement } = this.getSliderRect();
 
     const value = Num.modulate(this.currentValue, 1, this.config.range, true);
+
     const computedValue = this.offsetInterval(value);
+
     const left = Num.modulate(computedValue, this.config.range, trackRange, true);
+
     this.currentValue = Num.modulate(computedValue, this.config.range, 1, true);
 
     this.config.moveKnob(knobElement, left);
+
     this.onUpdate();
+
     return this;
   }
 
   private onUpdate() {
     if (DOMUtil.isHTMLElement(this.config.highlightElement) === true) {
       const highlightElement = this.config.highlightElement as HTMLElement;
+
       const { knobLeft, knobWidth, trackLeft } = this.getSliderRect();
+
       const width = knobLeft - trackLeft + (knobWidth / 2);
+
       this.config.updateHighlight(highlightElement, width, this);
     }
+
     this.config.onUpdate(this);
   }
 
   private offsetInterval(value): number {
     const range = this.config.range[1] - this.config.range[0];
+
     const remainder = range % this.config.interval;
+
     if (
       this.config.useInterval === true
       && typeof this.config.interval === 'number'
@@ -151,8 +171,14 @@ export class MonoKnobSlider {
       && remainder === 0
     ) {
       const valueRemainder = value % this.config.interval;
+
       const valueFloor = value - valueRemainder;
-      return (valueRemainder < this.config.interval / 2) ? valueFloor : valueFloor + this.config.interval;
+
+      if (valueRemainder < this.config.interval / 2) {
+        return valueFloor;
+      } else {
+        return valueFloor + this.config.interval;
+      }
     }
     return value;
   }
@@ -167,6 +193,7 @@ export class MonoKnobSlider {
     ) {
 
       const { trackRange, trackWidth, trackLeft, knobElement, knobWidth } = this.getSliderRect();
+
       const { position, target } = pointerEvent;
 
       if (
@@ -175,26 +202,36 @@ export class MonoKnobSlider {
       ) {
         // Check if pointer is at left edge.
         const pointerLeft = position.x - trackLeft;
+
         const halfKnobWidth = knobWidth / 2;
+
         if (pointerLeft >= 0 && pointerLeft <= halfKnobWidth) {
           this.currentValue = 0;
+
           this.config.moveKnob(knobElement, 0);
+
           this.onUpdate();
         // Check if pointer is at right edge.
         } else if (pointerLeft <= trackWidth && pointerLeft >= trackWidth - halfKnobWidth) {
           this.currentValue = 1;
+
           this.config.moveKnob(knobElement, trackWidth - knobWidth);
+
           this.onUpdate();
         // Check if pointer is in between
         } else if (pointerLeft > halfKnobWidth && pointerLeft < trackWidth - halfKnobWidth) {
           let left = pointerLeft - halfKnobWidth;
 
           const value = Num.modulate(left, trackRange, this.config.range, true);
+
           const computedValue = this.offsetInterval(value);
+
           left = Num.modulate(computedValue, this.config.range, trackRange, true);
+
           this.currentValue = Num.modulate(computedValue, this.config.range, 1, true);
 
           this.config.moveKnob(knobElement, left);
+
           this.onUpdate();
         }
       }
@@ -207,8 +244,11 @@ export class MonoKnobSlider {
         )
       ) {
         const { knobLeft } = this.getSliderRect();
+
         this.isActive = true;
+
         this.knobLeftOffset = position.x - knobLeft;
+
         this.config.onActivate(this);
       }
     }
@@ -217,20 +257,29 @@ export class MonoKnobSlider {
   private eventHandlerDrag = pointerEvent => {
     if (this.isActive === true) {
       const { trackRange, trackWidth, trackLeft, knobElement, knobWidth } = this.getSliderRect();
+
       const { position } = pointerEvent;
 
       // Get pointer left position relative to track with knob offset.
       let left = position.x - trackLeft - this.knobLeftOffset;
 
       // Make sure left is within the bound of the track.
-      if (left > trackWidth - knobWidth) left = trackWidth - knobWidth;
-      if (left < 0) left = 0;
+      if (left > trackWidth - knobWidth) {
+        left = trackWidth - knobWidth;
+      } else if (left < 0) {
+        left = 0;
+      }
 
       const value = Num.modulate(left, trackRange, this.config.range, true);
+
       const computedValue = this.offsetInterval(value);
+
       left = Num.modulate(computedValue, this.config.range, trackRange, true);
+
       this.currentValue = Num.modulate(left, trackRange, 1, true);
+
       this.config.moveKnob(knobElement, left);
+
       this.onUpdate();
     }
   }
@@ -238,6 +287,7 @@ export class MonoKnobSlider {
   private eventHandlerEnd = () => {
     if (this.isActive === true) {
       this.config.onDeactivate(this);
+
       this.isActive = false;
     }
   }
