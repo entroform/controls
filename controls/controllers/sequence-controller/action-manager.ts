@@ -1,17 +1,26 @@
-import { StringUtil } from '@nekobird/rocket';
+import {
+  StringUtil,
+} from '@nekobird/rocket';
 
-import { SequenceTriggerMap } from './config';
+import {
+  SequenceTriggerMap,
+} from './config';
 
-import { SequenceController } from './sequence-controller';
+import {
+  SequenceController,
+} from './sequence-controller';
 
 export type SequenceActionName = 'previous' | 'next' | 'jump';
 
 export interface SequenceAction {
   name: SequenceActionName;
+  
   currentItem?: HTMLElement;
+
   nextItem?: HTMLElement;
   nextItemIndex?: number;
   nextItemId?: string;
+
   trigger?: HTMLElement;
 }
 
@@ -27,27 +36,40 @@ export class ActionManager {
 
   private async completeAction(action: SequenceAction): Promise<void> {
     const { config, itemManager } = this.controller;
+
     const actionNameString = StringUtil.upperCaseFirstLetter(action.name);
+
     if (
-      itemManager.activeItem !== action.nextItem &&
-      config[`condition${actionNameString}`](action, this) === true
+      itemManager.activeItem !== action.nextItem
+      && config[`condition${actionNameString}`](action, this) === true
     ) {
       await config.beforeDeactivate(action, this.controller);
+
       this.deactivate();
+
       await config.afterDeactivate(action, this.controller);
+
       await config.beforeActivate(action, this.controller);
+
       this.activate(action);
+
       await config.afterActivate(action, this.controller);
     }
+
     return Promise.resolve();
   }
 
   private deactivate(): this {
     const { config, itemManager } = this.controller;
-    itemManager.items.forEach(item => config.deactivateItem(item, this.controller));
+
+    itemManager.items.forEach(item => {
+      config.deactivateItem(item, this.controller);
+    });
+
     itemManager.activeItem = undefined;
     itemManager.activeIndex = undefined;
     itemManager.isActive = false;
+
     return this;
   }
 

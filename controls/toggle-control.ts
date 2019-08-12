@@ -16,6 +16,7 @@ export const TOGGLE_CONTROL_DEFAULT_CONFIG: ToggleControlConfig = {
 
 export class ToggleControl {
   public config: ToggleControlConfig;
+
   public isOn: boolean = false;
   public isDisabled: boolean = false;
 

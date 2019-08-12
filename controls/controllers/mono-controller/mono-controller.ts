@@ -1,10 +1,19 @@
-import { DEFAULT_CONFIG, MonoConfig } from './config';
+import {
+  DEFAULT_CONFIG,
+  MonoConfig,
+} from './config';
 
-import { ItemManager } from './item-manager';
+import {
+  ItemManager,
+} from './item-manager';
 
-import { EventManager } from './event-manager';
+import {
+  EventManager,
+} from './event-manager';
 
-import { ActionManager } from './action-manager';
+import {
+  ActionManager,
+} from './action-manager';
 
 export class MonoController {
   public config: MonoConfig;
@@ -18,19 +27,24 @@ export class MonoController {
   constructor(config?: Partial<MonoConfig>) {
     this.config = Object.assign({}, DEFAULT_CONFIG);
     this.setConfig(config);
+
     this.itemManager = new ItemManager(this);
     this.eventManager = new EventManager(this);
     this.actionManager = new ActionManager(this);
   }
 
   public setConfig(config?: Partial<MonoConfig>): this {
-    if (typeof config === 'object') Object.assign(this.config, config);
+    if (typeof config === 'object') {
+      Object.assign(this.config, config);
+    }
+
     return this;
   }
 
   public initialize(): this {
     this.itemManager.initialize();
     this.eventManager.initialize();
+    
     return this;
   }
 
@@ -40,15 +54,23 @@ export class MonoController {
 
   public isItemActive(id: string): boolean {
     const { isActive, activeItem } = this.itemManager;
-    if (isActive === true && typeof activeItem !== 'undefined')
+
+    if (
+      isActive === true
+      && typeof activeItem !== 'undefined'
+    ) {
       return this.config.getItemId(activeItem) === id;
+    }
+
     return false;
   }
 
   public async activate(id: string): Promise<void> {
     try {
       const action = this.actionManager.composeAction('activate', id);
+
       await this.actionManager.actionHub(action);
+
       return Promise.resolve();
     } catch {
       return Promise.reject();
@@ -58,7 +80,9 @@ export class MonoController {
   public async deactivate(id?: string): Promise<void> {
     try {
       const action = this.actionManager.composeAction('deactivate', id);
+
       await this.actionManager.actionHub(action);
+
       return Promise.resolve();
     } catch {
       return Promise.reject();
@@ -68,7 +92,9 @@ export class MonoController {
   public async toggle(id?: string): Promise<void> {
     try {
       const action = this.actionManager.composeAction('toggle', id);
+
       await this.actionManager.actionHub(action);
+
       return Promise.resolve();
     } catch {
       return Promise.reject();

@@ -55,9 +55,11 @@ export const DUO_KNOB_SLIDER_DEFAULT_CONFIG: DuoKnobSliderConfig = {
   onDeactivate: () => {},
   onUpdate: () => {},
 
-  moveKnob: (knob, left) => (knob.style.transform = `translateX(${left}px)`),
+  moveKnob: (knob, left) => {
+    knob.style.transform = `translateX(${left}px)`;
+  },
 
-  updateHighlight: (highlight, left, width, slider) => {
+  updateHighlight: (highlight, left, width) => {
     highlight.style.transform = `translateX(${left}px)`;
     highlight.style.width = `${width}px`;
   },

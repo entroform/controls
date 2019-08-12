@@ -1,8 +1,18 @@
-import { AfterActionCallback, BeforeActionCallback, ConditionHook, Hook } from '../index';
+import {
+  AfterActionCallback,
+  BeforeActionCallback,
+  ConditionHook,
+  Hook,
+} from '../index';
 
-import { MonoAction, MonoActionName } from './action-manager';
+import {
+  MonoAction,
+  MonoActionName,
+} from './action-manager';
 
-import { MonoController } from './mono-controller';
+import {
+  MonoController,
+} from './mono-controller';
 
 export interface MonoTriggerMap {
   trigger: HTMLElement;

@@ -1,4 +1,6 @@
-import { MonoController } from './mono-controller';
+import {
+  MonoController,
+} from './mono-controller';
 
 export class ItemManager {
   private controller: MonoController;
@@ -17,8 +19,11 @@ export class ItemManager {
 
   public initialize(): this {
     this.loadItemsFromConfig();
+
     this.filterItems();
+
     this.filterActiveItems();
+
     return this;
   }
 

@@ -16,8 +16,10 @@ export type PolyActionName =
 
 export interface PolyAction {
   name: PolyActionName;
+  
   targetItem?: HTMLElement;
   targetId?: string;
+
   trigger?: HTMLElement;
 }
 

@@ -1,6 +1,13 @@
-import { DOMPoint, DOMRect, DOMUtil, Point } from '@nekobird/rocket';
+import {
+  DOMPoint,
+  DOMRect,
+  DOMUtil,
+  Point,
+} from '@nekobird/rocket';
 
-import { SortableList } from './sortable-list';
+import {
+  SortableList,
+} from './sortable-list';
 
 export class ActiveItem {
   public sortable: SortableList;
@@ -16,9 +23,14 @@ export class ActiveItem {
   }
 
   public create(item: HTMLElement) {
-    if (this.isActive === false && DOMUtil.isHTMLElement(item) === true) {
+    if (
+      this.isActive === false
+      && DOMUtil.isHTMLElement(item) === true
+    ) {
       this.element = item;
+
       this.currentGroup = this.element.parentElement as HTMLElement;
+
       this.isActive = true;
     }
   }
