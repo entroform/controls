@@ -1,6 +1,6 @@
 {
   "name": "@nekobird/controls",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "A collection of opinionated user-interface controls.",
   "homepage": "https://github.com/nekobird/controls#readme",
   "bugs": {
@@ -18,17 +18,16 @@
   "main": "build/controls.js",
   "types": "build/controls.d.ts",
   "scripts": {
-    "build": "rm -r build; tsc -t es6 --emitDeclarationOnly; parcel build ./controls/controls.ts --out-dir build",
     "build-docs": "rm -r ./docs; parcel build ./source/index.html --out-dir docs --public-url ./",
+    "build": "rm -r build; tsc -t es6 --emitDeclarationOnly; parcel build ./controls/controls.ts --out-dir build",
     "clean": "rm -r dist; rm -r build; rm -r .cache",
     "prepare": "npm run build",
-    "prettier": "prettier --write 'controls/**/*.ts'",
     "start": "parcel ./source/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browserslist": "> 1%, not dead",
   "dependencies": {
-    "@nekobird/rocket": "0.0.118"
+    "@nekobird/rocket": "0.0.119"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -36,7 +35,6 @@
     "@babel/plugin-transform-typescript": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-typescript": "^7.3.3",
-    "prettier": "^1.18.2",
     "sass": "^1.22.9",
     "typescript": "^3.5.3"
   }

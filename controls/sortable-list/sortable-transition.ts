@@ -1,4 +1,8 @@
-import { DOMStyle, DOMUtil } from '@nekobird/rocket';
+import {
+  DOMBoxModel,
+  DOMStyle,
+  DOMUtil
+} from '@nekobird/rocket';
 
 import { SortableList } from './sortable-list';
 
@@ -79,12 +83,12 @@ export class SortableListTransition {
     if (typeof this.group === 'object') {
       const { dummy, elementManager } = this.sortable;
       const items = elementManager.getItemsFromGroup(this.group);
-      let height = DOMStyle.getTotalVerticalInnerSpace(this.group);
+      let height = DOMBoxModel.getTotalVerticalInnerSpace(this.group);
       items.forEach(item => {
-        height += DOMStyle.getTotalVerticalDimension(item);
+        height += DOMBoxModel.getTotalVerticalDimension(item);
       });
       if (typeof dummy.element === 'object')
-        height += DOMStyle.getTotalVerticalDimension(dummy.element as HTMLElement);
+        height += DOMBoxModel.getTotalVerticalDimension(dummy.element as HTMLElement);
       const width = this.group.offsetWidth;
       this.group.style.boxSizing = 'border-box';
       this.group.style.width = `100%`;
@@ -148,7 +152,7 @@ export class SortableListTransition {
       let top = this.baseModel[0].top;
       let previousVertical = 0;
       targetModel.forEach(model => {
-        const vertical = DOMStyle.getTotalVerticalDimension(model.item);
+        const vertical = DOMBoxModel.getTotalVerticalDimension(model.item);
         top = top + previousVertical;
         model.left = left;
         model.top = top;

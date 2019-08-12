@@ -29,10 +29,43 @@ html {
   resize: none;
 }
 
-.duoKnobSlider {
-  .duoKnobSlider__track {
-    background-color: color('black');
+.monoKnobSlider {
+  .monoKnobSlider__track {
+    position: relative;
+    background-color: hsl(0, 0, 90);
     height: px-to-rem(40);
     width: 100%;
+  }
+
+  .monoKnobSlider__knob {
+    $_size: px-to-rem(40);
+
+    background-color: hsl(0, 0, 20);
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: $_size;
+    width: $_size;
+  }
+}
+
+.duoKnobSlider {
+  .duoKnobSlider__track {
+    position: relative;
+    background-color: hsl(0, 0, 90);
+    height: px-to-rem(40);
+    width: 100%;
+  }
+
+  .duoKnobSlider__knobOne,
+  .duoKnobSlider__knobTwo {
+    $_size: px-to-rem(40);
+
+    background-color: hsl(0, 0, 20);
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: $_size;
+    width: $_size;
   }
 }

@@ -1,4 +1,9 @@
-import { DOMTraverse, DOMUtil, Num, PointerDragEventManager } from '@nekobird/rocket';
+import {
+  DOMTraverse,
+  DOMUtil,
+  Num,
+  PointerDragEventManager,
+} from '@nekobird/rocket';
 
 export interface MonoKnobSliderConfig {
   trackElement?: HTMLElement;
@@ -54,13 +59,11 @@ export class MonoKnobSlider {
 
   private currentValue: number = 0;
 
-  private pointerDragEventManager: PointerDragEventManager;
+  private pointerDragEventManager?: PointerDragEventManager;
 
   constructor(config: Partial<MonoKnobSliderConfig>) {
     this.config = Object.assign({}, MONO_KNOB_SLIDER_DEFAULT_CONFIG);
     this.setConfig(config);
-
-    this.pointerDragEventManager = new PointerDragEventManager();
 
     this.config.onInit(this);
 
