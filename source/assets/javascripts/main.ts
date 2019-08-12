@@ -33,4 +33,14 @@ const duoKnobSlider = new DuoKnobSlider({
   knobTwoElement: duoSliderElement.querySelector('.duoKnobSlider__knobTwo'),
   minValueElement: duoSliderElement.querySelector('.duoKnobSlider__valueOne'),
   maxValueElement: duoSliderElement.querySelector('.duoKnobSlider__valueTwo'),
+
+  range: [20, 80],
+
+  onInit: slider => {
+    slider.value = [20, 80];
+  },
+
+  onUpdate: slider => {
+    console.log(slider.value);
+  },
 });

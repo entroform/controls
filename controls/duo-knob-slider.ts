@@ -275,9 +275,9 @@ export class DuoKnobSlider {
       this.knobOneValue = Num.modulate(computedMinValue, this.config.range, 1, true);
 
       this.updateValueFromKnobValues();
- 
+
       this.config.moveKnob(knobOneElement, left);
- 
+
       this.onUpdate()
     }
   };
@@ -342,9 +342,11 @@ export class DuoKnobSlider {
   }
 
   private onUpdate() {
-    const { highlightElement } = this.config;
+    let { highlightElement } = this.config;
 
     if (DOMUtil.isHTMLElement(highlightElement) === true) {
+      highlightElement = highlightElement as HTMLElement;
+
       const slider = this.getSliderRect();
 
       const knobOneMiddle = slider.knobOneRect.left + slider.knobOneRect.width / 2;
@@ -354,10 +356,10 @@ export class DuoKnobSlider {
 
       const width = Num.getEuclideanDistance(knobOneMiddle, knobTwoMiddle);
 
-      this.config.updateHighlight(highlightElement as HTMLElement, left, width, this);
-
-      this.config.onUpdate(this)
+      this.config.updateHighlight(highlightElement, left, width, this);
     }
+
+    this.config.onUpdate(this)
   }
 
   public listen() {
@@ -368,7 +370,7 @@ export class DuoKnobSlider {
         target: knobOneElement,
 
         keepHistory: false,
-        
+
         preventDefault: true,
 
         onStart: this.knobOneEventHandlerStart,
@@ -381,7 +383,7 @@ export class DuoKnobSlider {
         target: knobTwoElement,
 
         keepHistory: false,
-        
+
         preventDefault: true,
 
         onStart: this.knobTwoEventHandlerStart,

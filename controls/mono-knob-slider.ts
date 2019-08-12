@@ -125,13 +125,15 @@ export class MonoKnobSlider {
   public update(): this {
     const { trackRange, knobElement } = this.getSliderRect();
 
-    const value = Num.modulate(this.currentValue, 1, this.config.range, true);
+    const { range } = this.config;
+
+    const value = Num.modulate(this.currentValue, 1, range, true);
 
     const computedValue = this.offsetInterval(value);
 
-    const left = Num.modulate(computedValue, this.config.range, trackRange, true);
+    this.currentValue = Num.modulate(computedValue, range, 1, true);
 
-    this.currentValue = Num.modulate(computedValue, this.config.range, 1, true);
+    const left = Num.modulate(computedValue, range, trackRange, true);
 
     this.config.moveKnob(knobElement, left);
 
@@ -183,19 +185,22 @@ export class MonoKnobSlider {
 
   // TODO: Break this into two.
   private eventHandlerStart = pointerEvent => {
+    let { trackElement, knobElement, listenToKnobOnly } = this.config;
+
     if (
       this.isDisabled === false
       && this.isActive === false
-      && DOMUtil.isHTMLElement(this.config.knobElement) === true
-      && DOMUtil.isHTMLElement(this.config.trackElement) === true
+      && DOMUtil.isHTMLElement(trackElement, knobElement) === true
     ) {
-      const { trackRange, trackWidth, trackLeft, knobElement, knobWidth } = this.getSliderRect();
+      knobElement = knobElement as HTMLElement;
+
+      const { trackRange, trackWidth, trackLeft, knobWidth } = this.getSliderRect();
 
       const { position, target } = pointerEvent;
 
       if (
-        this.config.listenToKnobOnly === false
-        && pointerEvent.target === this.config.trackElement
+        listenToKnobOnly === false
+        && target === trackElement
       ) {
         // Check if pointer is at left edge.
         const pointerLeft = position.x - trackLeft;
@@ -290,11 +295,16 @@ export class MonoKnobSlider {
   };
 
   public listen() {
-    if (DOMUtil.isHTMLElement(this.config.trackElement) === true) {
+    let { trackElement } = this.config;
+
+    if (DOMUtil.isHTMLElement(trackElement) === true) {
       this.pointerDragEventManager = new PointerDragEventManager({
         onEvent: event => event.preventDefault(),
+
         keepHistory: false,
+
         target: this.config.trackElement,
+
         onStart: this.eventHandlerStart,
         onDrag: this.eventHandlerDrag,
         onEnd: this.eventHandlerEnd,
