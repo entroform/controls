@@ -40,7 +40,10 @@ export class ToggleControl {
 
       const value = this.config.transformValue(target, this.isOn, this);
 
-      if (typeof value === 'undefined' || value === null) {
+      if (
+        typeof value === 'undefined'
+        || value === null
+      ) {
         return this.isOn;
       }
 

@@ -5,65 +5,18 @@ import {
   PointerDragEventManager,
 } from '@nekobird/rocket';
 
-export interface DuoKnobSliderConfig {
-  trackElement?: HTMLElement;
+import {
+  DuoKnobSliderConfig,
+  DUO_KNOB_SLIDER_DEFAULT_CONFIG,
+} from './config';
 
-  knobOneElement?: HTMLElement;
-  knobTwoElement?: HTMLElement;
+import {
+  KnobOne,
+} from './knob-one';
 
-  highlightElement?: HTMLElement;
-
-  minValueElement?: HTMLElement;
-  maxValueElement?: HTMLElement;
-
-  range: [number, number];
-  interval: number;
-  useInterval: boolean;
-
-  onInit: (slider: DuoKnobSlider) => void;
-  onActivate: (slider: DuoKnobSlider) => void;
-  onDeactivate: (slider: DuoKnobSlider) => void;
-  onUpdate: (slider: DuoKnobSlider) => void;
-
-  moveKnob: (knob: HTMLElement, left: number) => void;
-
-  updateHighlight: (
-    highlight: HTMLElement,
-    left: number,
-    width: number,
-    slider: DuoKnobSlider,
-  ) => void;
-}
-
-export const DUO_KNOB_SLIDER_DEFAULT_CONFIG: DuoKnobSliderConfig = {
-  trackElement: undefined,
-
-  knobOneElement: undefined,
-  knobTwoElement: undefined,
-
-  highlightElement: undefined,
-
-  minValueElement: undefined,
-  maxValueElement: undefined,
-
-  range: [0, 1],
-  interval: 0.1,
-  useInterval: false,
-
-  onInit: () => {},
-  onActivate: () => {},
-  onDeactivate: () => {},
-  onUpdate: () => {},
-
-  moveKnob: (knob, left) => {
-    knob.style.transform = `translateX(${left}px)`;
-  },
-
-  updateHighlight: (highlight, left, width) => {
-    highlight.style.transform = `translateX(${left}px)`;
-    highlight.style.width = `${width}px`;
-  },
-};
+import {
+  KnobTwo,
+} from './knob-two';
 
 export class DuoKnobSlider {
   public config: DuoKnobSliderConfig;
@@ -71,23 +24,17 @@ export class DuoKnobSlider {
   public isActive: boolean = false;
   public isDisabled: boolean = false;
 
-  public knobOneIsActive: boolean = false;
-  public knobTwoIsActive: boolean = false;
-
-  private knobOneLeftOffset: number = 0;
-  private knobTwoLeftOffset: number = 0;
-
-  private knobOnePointerDragEventManager?: PointerDragEventManager;
-  private knobTwoPointerDragEventManager?: PointerDragEventManager;
-
-  public knobOneValue: number = 0;
-  public knobTwoValue: number = 1;
+  public knobOne: KnobOne;
+  public knobTwo: KnobTwo;
 
   private currentValue: [number, number];
 
   constructor(config: Partial<DuoKnobSliderConfig>) {
     this.config = Object.assign({}, DUO_KNOB_SLIDER_DEFAULT_CONFIG);
     this.setConfig(config);
+
+    this.knobOne = new KnobOne(this);
+    this.knobTwo = new KnobTwo(this);
 
     this.currentValue = [0, 1];
 

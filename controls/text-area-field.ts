@@ -1,4 +1,7 @@
-import { DOMStyle, TextBoxModel } from '@nekobird/rocket';
+import {
+  DOMStyle,
+  TextBoxModel,
+} from '@nekobird/rocket';
 
 export interface TextAreaFieldConfig {
   element?: HTMLTextAreaElement;

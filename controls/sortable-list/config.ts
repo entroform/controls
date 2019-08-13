@@ -1,10 +1,18 @@
-import { DOMStyle, DragEventManager, Point } from '@nekobird/rocket';
+import {
+  DOMStyle,
+  DragEventManager,
+  Point,
+} from '@nekobird/rocket';
 
-import { SortableList } from './sortable-list';
+import {
+  SortableList,
+} from './sortable-list';
 
 export interface SortableListConfig {
   useTransition: boolean;
+
   transitionDuration: number;
+
   transitionTimingFunction: string;
 
   leftMouseButtonOnly: boolean;
