@@ -1,6 +1,7 @@
 import {
   DOMUtil,
   DOMTraverse,
+  Num,
   PointerDragEventManager,
 } from '@nekobird/rocket';
 
@@ -8,17 +9,38 @@ import {
   DuoKnobSlider,
 } from './duo-knob-slider';
 
-export class KnobTwo {
-
+export class KnobOne {
   private duoKnobSlider: DuoKnobSlider;
 
-  public isActive: boolean = false;
-  public knobLeftOffset: number;
+  private pointerDragEventManager?: PointerDragEventManager;
 
-  public pointerDragEventManager: PointerDragEventManager;
+  public isActive: boolean = false;
+
+  public offsetLeft: number = 0;
+
+  public value: number = 0;
 
   constructor(duoKnobSlider: DuoKnobSlider) {
     this.duoKnobSlider = duoKnobSlider;
+  }
+
+  public listen() {
+    const { knobOneElement } = this.duoKnobSlider.config;
+
+    if (DOMUtil.isHTMLElement(knobOneElement) === true) {
+      this.pointerDragEventManager = new PointerDragEventManager({
+        target: knobOneElement,
+
+        keepHistory: false,
+
+        preventDefault: true,
+
+        onStart: this.eventHandlerStart,
+        onDrag: this.eventHandlerDrag,
+        onEnd: this.eventHandlerEnd,
+        onCancel: this.eventHandlerEnd,
+      });
+    }
   }
 
   private eventHandlerStart = pointerEvent => {
@@ -40,7 +62,7 @@ export class KnobTwo {
 
       this.isActive = true;
 
-      this.knobLeftOffset = position.x - left;
+      this.offsetLeft = position.x - left;
 
       this.duoKnobSlider.config.onActivate(this.duoKnobSlider);
     }
@@ -52,7 +74,7 @@ export class KnobTwo {
 
       const { position } = pointerEvent;
 
-      let left = position.x - trackRect.left - this.knobOneLeftOffset;
+      let left = position.x - trackRect.left - this.offsetLeft;
 
       if (left < 0) {
         left = 0;
@@ -77,61 +99,8 @@ export class KnobTwo {
   };
 
   private eventHandlerEnd = () => {
-    if (this.knobOneIsActive === true) {
-      this.config.onDeactivate(this);
+    if (this.isActive === true) {
 
-      this.knobOneIsActive = false;
-
-      this.checkIfActive();
     }
   };
-
-  private checkIfActive() {
-    if (
-      this.knobOneIsActive === false
-      && this.isActive === false
-    ) {
-      this.isActive = false;
-    }
-  }
-
-  private onUpdate() {
-    let { highlightElement } = this.duoKnobSlider.config;
-
-    if (DOMUtil.isHTMLElement(highlightElement) === true) {
-      highlightElement = highlightElement as HTMLElement;
-
-      const slider = this.getSliderRect();
-
-      const knobOneMiddle = slider.knobOneRect.left + slider.knobOneRect.width / 2;
-      const knobTwoMiddle = slider.knobTwoRect.left + slider.knobTwoRect.width / 2;
-
-      const left = Math.min(knobOneMiddle, knobTwoMiddle) - slider.trackRect.left;
-
-      const width = Num.getEuclideanDistance(knobOneMiddle, knobTwoMiddle);
-
-      this.config.updateHighlight(highlightElement, left, width, this);
-    }
-
-    this.config.onUpdate(this)
-  }
-
-  public listen() {
-    const { knobTwoElement } = this.duoKnobSlider.config;
-
-    if (DOMUtil.isHTMLElement(knobTwoElement) === true) {
-      this.pointerDragEventManager = new PointerDragEventManager({
-        target: knobTwoElement,
-
-        keepHistory: false,
-
-        preventDefault: true,
-
-        onStart: this.eventHandlerStart,
-        onDrag: this.eventHandlerDrag,
-        onEnd: this.eventHandlerEnd,
-        onCancel: this.eventHandlerEnd,
-      });
-    }
-  }
 }

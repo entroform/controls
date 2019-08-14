@@ -13,9 +13,10 @@ export interface DuoKnobSliderConfig {
   minValueElement?: HTMLElement;
   maxValueElement?: HTMLElement;
 
-  range: [number, number];
-  interval: number;
-  useInterval: boolean;
+  valueRange: [number, number];
+
+  snapToValueInterval: boolean;
+  valueInterval: number;
 
   onInit: (slider: DuoKnobSlider) => void;
   onActivate: (slider: DuoKnobSlider) => void;
@@ -43,9 +44,10 @@ export const DUO_KNOB_SLIDER_DEFAULT_CONFIG: DuoKnobSliderConfig = {
   minValueElement: undefined,
   maxValueElement: undefined,
 
-  range: [0, 1],
-  interval: 0.1,
-  useInterval: false,
+  valueRange: [0, 1],
+
+  snapToValueInterval: false,
+  valueInterval: 0.1,
 
   onInit: () => {},
   onActivate: () => {},

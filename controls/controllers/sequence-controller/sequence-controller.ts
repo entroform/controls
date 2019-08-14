@@ -1,10 +1,19 @@
-import { DEFAULT_CONFIG, SequenceConfig } from './config';
+import {
+  DEFAULT_CONFIG,
+  SequenceConfig,
+} from './config';
 
-import { ItemManager } from './item-manager';
+import {
+  ItemManager,
+} from './item-manager';
 
-import { EventManager } from './event-manager';
+import {
+  EventManager,
+} from './event-manager';
 
-import { ActionManager } from './action-manager';
+import {
+  ActionManager,
+} from './action-manager';
 
 export class SequenceController {
   public config: SequenceConfig;
@@ -18,19 +27,24 @@ export class SequenceController {
   constructor(config?: Partial<SequenceConfig>) {
     this.config = Object.assign({}, DEFAULT_CONFIG);
     this.setConfig(config);
+
     this.itemManager = new ItemManager(this);
     this.eventManager = new EventManager(this);
     this.actionManager = new ActionManager(this);
   }
 
   public setConfig(config?: Partial<SequenceConfig>): this {
-    if (typeof config === 'object') Object.assign(this.config, config);
+    if (typeof config === 'object') {
+      Object.assign(this.config, config);
+    }
+
     return this;
   }
 
   public initialize(): this {
     this.itemManager.initialize();
     this.eventManager.initialize();
+
     return this;
   }
 
@@ -40,14 +54,20 @@ export class SequenceController {
 
   public isItemActive(id: string): boolean {
     const { activeItem } = this.itemManager;
-    if (typeof activeItem == 'object') return this.config.getItemId(activeItem) === id;
+
+    if (typeof activeItem == 'object') {
+      return this.config.getItemId(activeItem) === id;
+    }
+
     return false;
   }
 
   public async previous(): Promise<void> {
     try {
       const action = this.actionManager.composeAction('previous');
+
       await this.actionManager.actionHub(action);
+
       return Promise.resolve();
     } catch {
       return Promise.reject();
@@ -57,7 +77,9 @@ export class SequenceController {
   public async next(): Promise<void> {
     try {
       const action = this.actionManager.composeAction('next');
+
       await this.actionManager.actionHub(action);
+
       return Promise.resolve();
     } catch {
       return Promise.reject();
@@ -67,7 +89,9 @@ export class SequenceController {
   public async jump(id: string): Promise<void> {
     try {
       const action = this.actionManager.composeAction('jump', id);
+
       await this.actionManager.actionHub(action);
+
       return Promise.resolve();
     } catch {
       return Promise.reject();

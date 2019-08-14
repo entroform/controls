@@ -5,7 +5,6 @@ import {
 } from './config';
 
 export class InputActiveManager {
-
   public config: InputActiveManagerConfig;
 
   public element?: InputElement;

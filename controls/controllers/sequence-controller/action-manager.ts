@@ -75,10 +75,14 @@ export class ActionManager {
 
   private activate({ nextItem, nextItemIndex }: SequenceAction): this {
     const { config, itemManager } = this.controller;
+
     if (typeof nextItem === 'object') {
       config.activateItem(nextItem, this.controller);
+
       itemManager.activeItem = nextItem;
+
       itemManager.activeIndex = nextItemIndex;
+
       itemManager.isActive = true;
     }
     return this;
@@ -86,48 +90,63 @@ export class ActionManager {
 
   private setActionTargetPrevious(action: SequenceAction): SequenceAction {
     const { itemManager } = this.controller;
+
     if (typeof itemManager.activeIndex === 'number') {
       let index: number;
+
       if (itemManager.activeIndex - 1 >= 0) {
         index = itemManager.activeIndex - 1;
       } else {
         index = itemManager.items.length - 1;
       }
+
       action.nextItem = itemManager.items[index];
+
       action.nextItemIndex = index;
     }
+
     return action;
   }
 
   private setActionTargetNext(action: SequenceAction): SequenceAction {
     const { itemManager } = this.controller;
+
     if (typeof itemManager.activeIndex === 'number') {
       let index: number;
+
       if (itemManager.activeIndex + 1 >= itemManager.items.length) {
         index = 0;
       } else {
         index = itemManager.activeIndex + 1;
       }
+
       action.nextItem = itemManager.items[index];
+
       action.nextItemIndex = index;
     }
+
     return action;
   }
 
   private setActionTargetJump(action: SequenceAction): SequenceAction {
     const { itemManager } = this.controller;
+
     if (typeof action.nextItemId === 'string') {
       const item = itemManager.getItemFromId(action.nextItemId);
+
       if (item !== false) {
         action.nextItem = item;
+
         action.nextItemIndex = itemManager.items.indexOf(action.nextItem);
       }
     }
+
     return action;
   }
 
   public createAction(actionName: SequenceActionName): SequenceAction {
     const { itemManager } = this.controller;
+
     return {
       name: actionName,
       currentItem: itemManager.activeItem,
@@ -136,7 +155,11 @@ export class ActionManager {
 
   public composeAction(actionName: SequenceActionName, id?: string): SequenceAction {
     const action = this.createAction(actionName);
-    if (typeof id === 'string') action.nextItemId = id;
+
+    if (typeof id === 'string') {
+      action.nextItemId = id;
+    }
+
     return action;
   }
 
@@ -145,8 +168,11 @@ export class ActionManager {
     triggerMap: SequenceTriggerMap,
   ): SequenceAction {
     const action = this.createAction(triggerMap.action);
+
     action.nextItemId = triggerMap.payload;
+
     action.trigger = trigger;
+
     return action;
   }
 

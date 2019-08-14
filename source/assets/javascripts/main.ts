@@ -1,7 +1,7 @@
 import {
-  TextAreaField,
-  MonoKnobSlider,
   DuoKnobSlider,
+  MonoKnobSlider,
+  TextAreaField,
 } from '../../../controls/controls';
 
 const textareaElements = document.querySelectorAll('.textareafield');

@@ -18,6 +18,8 @@ import {
   KnobTwo,
 } from './knob-two';
 
+type DuoKnobSliderModes = 'free' | 'normal' | 'strict';
+
 export class DuoKnobSlider {
   public config: DuoKnobSliderConfig;
 

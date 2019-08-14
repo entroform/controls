@@ -16,7 +16,7 @@ export class MonoKnobSlider {
   public isActive: boolean = false;
   public isDisabled: boolean = false;
 
-  private knobLeftOffset: number = 0;
+  private knobOffset: number = 0;
 
   private currentValue: number = 0;
 
@@ -42,7 +42,7 @@ export class MonoKnobSlider {
   }
 
   public get value(): number {
-    const value = Num.modulate(this.currentValue, 1, this.config.range, true);
+    const value = Num.modulate(this.currentValue, 1, this.config.valueRange, true);
 
     return this.offsetInterval(value);
   }
@@ -52,9 +52,9 @@ export class MonoKnobSlider {
 
     const computedValue = this.offsetInterval(value);
 
-    const left = Num.modulate(computedValue, this.config.range, trackRange, true);
+    const left = Num.modulate(computedValue, this.config.valueRange, trackRange, true);
 
-    this.currentValue = Num.modulate(computedValue, this.config.range, 1, true);
+    this.currentValue = Num.modulate(computedValue, this.config.valueRange, 1, true);
 
     this.config.moveKnob(knobElement, left);
 
@@ -88,15 +88,15 @@ export class MonoKnobSlider {
   public update(): this {
     const { trackRange, knobElement } = this.getSliderRect();
 
-    const { range } = this.config;
+    const { valueRange } = this.config;
 
-    const value = Num.modulate(this.currentValue, 1, range, true);
+    const value = Num.modulate(this.currentValue, 1, valueRange, true);
 
     const computedValue = this.offsetInterval(value);
 
-    this.currentValue = Num.modulate(computedValue, range, 1, true);
+    this.currentValue = Num.modulate(computedValue, valueRange, 1, true);
 
-    const left = Num.modulate(computedValue, range, trackRange, true);
+    const left = Num.modulate(computedValue, valueRange, trackRange, true);
 
     this.config.moveKnob(knobElement, left);
 
@@ -120,26 +120,26 @@ export class MonoKnobSlider {
   }
 
   private offsetInterval(value): number {
-    const range = this.config.range[1] - this.config.range[0];
+    const range = this.config.valueRange[1] - this.config.valueRange[0];
 
-    const remainder = range % this.config.interval;
+    const remainder = range % this.config.valueInterval;
 
     if (
-      this.config.useInterval === true
-      && typeof this.config.interval === 'number'
-      && this.config.interval !== 0
-      && this.config.interval < range
-      && this.config.interval > 0
+      this.config.snapToValueInterval === true
+      && typeof this.config.valueInterval === 'number'
+      && this.config.valueInterval !== 0
+      && this.config.valueInterval < range
+      && this.config.valueInterval > 0
       && remainder === 0
     ) {
-      const valueRemainder = value % this.config.interval;
+      const valueRemainder = value % this.config.valueInterval;
 
       const valueFloor = value - valueRemainder;
 
-      if (valueRemainder < this.config.interval / 2) {
+      if (valueRemainder < this.config.valueInterval / 2) {
         return valueFloor;
       } else {
-        return valueFloor + this.config.interval;
+        return valueFloor + this.config.valueInterval;
       }
     }
 
@@ -187,13 +187,13 @@ export class MonoKnobSlider {
         } else if (pointerLeft > halfKnobWidth && pointerLeft < trackWidth - halfKnobWidth) {
           let left = pointerLeft - halfKnobWidth;
 
-          const value = Num.modulate(left, trackRange, this.config.range, true);
+          const value = Num.modulate(left, trackRange, this.config.valueRange, true);
 
           const computedValue = this.offsetInterval(value);
 
-          left = Num.modulate(computedValue, this.config.range, trackRange, true);
+          left = Num.modulate(computedValue, this.config.valueRange, trackRange, true);
 
-          this.currentValue = Num.modulate(computedValue, this.config.range, 1, true);
+          this.currentValue = Num.modulate(computedValue, this.config.valueRange, 1, true);
 
           this.config.moveKnob(knobElement, left);
 
@@ -212,7 +212,7 @@ export class MonoKnobSlider {
 
         this.isActive = true;
 
-        this.knobLeftOffset = position.x - knobLeft;
+        this.knobOffset = position.x - knobLeft;
 
         this.config.onActivate(this);
       }
@@ -226,7 +226,7 @@ export class MonoKnobSlider {
       const { position } = pointerEvent;
 
       // Get pointer left position relative to track with knob offset.
-      let left = position.x - trackLeft - this.knobLeftOffset;
+      let left = position.x - trackLeft - this.knobOffset;
 
       // Make sure left is within the bound of the track.
       if (left > trackWidth - knobWidth) {
@@ -235,11 +235,11 @@ export class MonoKnobSlider {
         left = 0;
       }
 
-      const value = Num.modulate(left, trackRange, this.config.range, true);
+      const value = Num.modulate(left, trackRange, this.config.valueRange, true);
 
       const computedValue = this.offsetInterval(value);
 
-      left = Num.modulate(computedValue, this.config.range, trackRange, true);
+      left = Num.modulate(computedValue, this.config.valueRange, trackRange, true);
 
       this.currentValue = Num.modulate(left, trackRange, 1, true);
 
