@@ -1,11 +1,7 @@
 import {
-  DOMTraverse,
-} from '@nekobird/rocket';
-
-import {
-  InputElement,
-  InputActiveManagerConfig,
   INPUT_FOCUS_MANAGER_CONFIG,
+  InputActiveManagerConfig,
+  InputElement,
 } from './config';
 
 export class InputActiveManager {
@@ -74,6 +70,7 @@ export class InputActiveManager {
       await this.config.beforeActivate(element);
 
       await this.config.activate(element);
+
       this.isActive = true;
 
       return this.config.afterActivate(element);
@@ -92,6 +89,7 @@ export class InputActiveManager {
       await this.config.beforeDeactivate(element);
 
       await this.config.deactivate(element);
+
       this.isActive = false;
 
       return this.config.afterDeactivate(element);

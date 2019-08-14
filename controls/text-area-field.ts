@@ -42,6 +42,7 @@ export class TextAreaField {
   public config: TextAreaFieldConfig;
 
   public isInFocus: boolean = false;
+
   public previousKeyCode?: number;
 
   constructor(config?: Partial<TextAreaFieldConfig>) {
@@ -86,22 +87,30 @@ export class TextAreaField {
 
   public insert(string: string): this {
     const element = this.config.element as HTMLTextAreaElement;
+
     const start = element.selectionStart;
     const end = element.selectionEnd;
+
     const text = element.value;
+
     element.value = text.substring(0, start) + string + text.substring(end);
+
     element.selectionEnd = start + string.length;
+
     return this;
   }
 
   get value(): string {
     const element = this.config.element as HTMLTextAreaElement;
+
     return element.value;
   }
 
   set value(value: string) {
     const element = this.config.element as HTMLTextAreaElement;
+
     element.value = value;
+
     this.filterAndGrow();
   }
 
@@ -219,6 +228,7 @@ export class TextAreaField {
 
     if (key === 'Tab') {
       this.insert('\t');
+
       event.preventDefault();
     }
 

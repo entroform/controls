@@ -4,12 +4,14 @@ import {
 
 export interface ToggleControlConfig {
   target?: HTMLElement;
+
   onToggleControl: (element: HTMLElement, value: boolean, control: ToggleControl) => void;
   transformValue: <V>(element: HTMLElement, value: boolean, control: ToggleControl) => V;
 }
 
 export const TOGGLE_CONTROL_DEFAULT_CONFIG: ToggleControlConfig = {
   target: undefined,
+
   onToggleControl: () => {},
   transformValue: <value>(element, value) => value,
 };
