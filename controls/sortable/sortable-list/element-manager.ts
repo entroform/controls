@@ -1,4 +1,6 @@
-import { SortableList } from './sortable-list';
+import {
+  SortableList,
+} from './sortable-list';
 
 export class ElementManager {
   public sortable: SortableList;

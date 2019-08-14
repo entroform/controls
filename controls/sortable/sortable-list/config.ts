@@ -22,13 +22,17 @@ export interface SortableListConfig {
   autoScroll: boolean;
 
   groupsSelector?: string;
+
   groups?: HTMLElement[] | NodeListOf<HTMLElement> | HTMLCollection;
+
   childIsItem: (child: HTMLElement) => boolean;
 
   prepareGroup: (group: HTMLElement) => void;
+
   prepareItems: (item: HTMLElement) => void;
 
   createDummyFromItem: (item: HTMLElement, context: SortableList) => HTMLElement;
+
   setDummyElementPropertiesFromItem: (
     dummyElement: HTMLElement,
     item: HTMLElement,
@@ -36,8 +40,11 @@ export interface SortableListConfig {
   ) => void;
 
   activateOnLongPress: boolean;
+
   listenToLongPress: boolean;
+
   longPressWait: number;
+
   longPressCondition: (event, manager: DragEventManager, context: SortableList) => boolean;
 
   condition: (
@@ -48,15 +55,19 @@ export interface SortableListConfig {
   ) => boolean;
 
   beforeActivate: (context: SortableList) => void;
+
   beforeDeactivate: (context: SortableList) => void;
 
   activateItem: (item: HTMLElement, context: SortableList) => void;
+
   deactivateItem: (item: HTMLElement, context: SortableList) => void;
 
   afterActivate: (context: SortableList) => void;
+
   afterDeactivate: (context: SortableList) => void;
 
   popItem: (item: HTMLElement, context: SortableList) => void;
+
   unpopItem: (item: HTMLElement, context: SortableList) => void;
 
   moveItem: (item: HTMLElement, to: Point, context: SortableList) => void;
@@ -64,9 +75,13 @@ export interface SortableListConfig {
   onComplete: (context: SortableList) => void;
 
   onDown: (item: HTMLElement, event, manager: DragEventManager, context: SortableList) => void;
+
   onDrag: (item: HTMLElement, event, manager: DragEventManager, context: SortableList) => void;
+
   onUp: (item: HTMLElement, event, manager: DragEventManager, context: SortableList) => void;
+
   onCancel: (item: HTMLElement, event, manager: DragEventManager, context: SortableList) => void;
+
   onLongPress: (item: HTMLElement, event, manager: DragEventManager, context: SortableList) => void;
 }
 

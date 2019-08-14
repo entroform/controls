@@ -133,6 +133,7 @@ export class ActionManager {
 
       if (typeof nextItem === 'object') {
         action.nextItem = nextItem;
+
         action.nextItemId = id;
       }
 
@@ -208,12 +209,14 @@ export class ActionManager {
 
   public endAction(callback?: Function): Promise<void> {
     if (this.isNested === false) {
+      const { cooldown } = this.controller.config;
+
       return new Promise(resolve => {
         setTimeout(() => {
           this.isRunning = false;
 
           resolve();
-        }, this.controller.config.cooldown);
+        }, cooldown);
       });
     }
 

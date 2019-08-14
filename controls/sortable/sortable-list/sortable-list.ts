@@ -42,16 +42,20 @@ export class SortableList {
   }
 
   public setConfig(config?: Partial<SortableListConfig>) {
-    if (typeof config === 'object') Object.assign(this.config, config);
+    if (typeof config === 'object') {
+      Object.assign(this.config, config);
+    }
   }
 
   public initialize() {
     this.elementManager.initialize();
+
     this.eventManager.initialize();
   }
 
   public get groupElements(): HTMLElement[] | false {
     const { groups } = this.elementManager;
+
     if (typeof groups === 'object' && Array.isArray(groups) === true) return groups;
     return false;
   }

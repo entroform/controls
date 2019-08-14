@@ -177,23 +177,32 @@ export class ActionManager {
   }
 
   public async actionHub(action: SequenceAction, isNestedAction: boolean = false): Promise<void> {
-    if (this.isRunning === true && isNestedAction === true) this.isNested = true;
+    if (
+      this.isRunning === true
+      && isNestedAction === true
+    ) {
+      this.isNested = true;
+    }
 
     this.isRunning = true;
 
-    const actionNameString: string = StringUtil.upperCaseFirstLetter(action.name);
+    const actionNameString = StringUtil.uppercaseFirstLetter(action.name);
+
     this[`setActionTarget${actionNameString}`](action);
 
     const { config } = this.controller;
 
     let preAction: Promise<void>;
+
     if (this.isNested === false) {
       preAction = new Promise(resolve => {
         this.isNested = true;
+
         config
           .beforeAction(action, this.controller)
           .then(() => {
             this.isNested = false;
+
             resolve();
           })
           .catch(() => (this.isNested = false));
@@ -204,12 +213,24 @@ export class ActionManager {
 
     try {
       await preAction;
+
       await this.completeAction(action);
+
       await this.endAction();
-      if (isNestedAction === true && this.isNested === true) this.isNested = false;
-      if (this.isNested === false) config.afterAction(action, this.controller);
+
+      if (
+        isNestedAction === true
+        && this.isNested === true
+      ) {
+        this.isNested = false;
+      }
+
+      if (this.isNested === false) { 
+        config.afterAction(action, this.controller);
+      }
     } catch {
       await this.endAction();
+
       return Promise.reject();
     }
   }
@@ -219,11 +240,19 @@ export class ActionManager {
       return new Promise(resolve => {
         setTimeout(() => {
           this.isRunning = false;
+
           resolve();
         }, this.controller.config.cooldown);
       });
     }
-    if (this.isRunning === false && this.isNested === true) this.isNested = false;
+
+    if (
+      this.isRunning === false
+      && this.isNested === true
+    ) {
+      this.isNested = false;
+    }
+
     return Promise.resolve();
   }
 }

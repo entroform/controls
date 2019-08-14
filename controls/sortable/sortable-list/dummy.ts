@@ -1,11 +1,16 @@
-import { DOMUtil } from '@nekobird/rocket';
+import {
+  DOMUtil,
+} from '@nekobird/rocket';
 
-import { SortableList } from './sortable-list';
+import {
+  SortableList,
+} from './sortable-list';
 
 export class Dummy {
   public sortable: SortableList;
 
   public element?: HTMLElement;
+
   public isActive: boolean = false;
 
   constructor(sortable: SortableList) {
@@ -14,6 +19,7 @@ export class Dummy {
 
   public create() {
     const { isActive, activeItem, config } = this.sortable;
+
     if (
       this.isActive === false &&
       isActive === true &&
