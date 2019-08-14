@@ -4,6 +4,10 @@ import {
   InputElement,
 } from './config';
 
+// InputActiveManager
+// Lets you watch for input changes: input, focus, blur
+// and connect it different callbacks.
+
 export class InputActiveManager {
   public config: InputActiveManagerConfig;
 
