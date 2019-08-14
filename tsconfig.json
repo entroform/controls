@@ -13,7 +13,7 @@
     "target": "ES2015",
   },
   "include": [
-    "controls/*", "controls/input-active-manager/input-active-manager.ts", "controls/sortable/sortable-list", "controls/slider/duo-knob-slider", "controls/slider/mono-knob-slider",
+    "controls/*", "controls/input-active-manager/input-active-manager.ts", "controls/sortable/sortable-list", "controls/slider/duo-knob-slider", "controls/slider/mono-knob-slider", "controls/toggle-control/toggle-control.ts",
   ],
   "exclude": [
     "node_modules",
