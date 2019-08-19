@@ -37,7 +37,7 @@ export class ActionManager {
   private async completeAction(action: SequenceAction): Promise<void> {
     const { config, itemManager } = this.controller;
 
-    const actionNameString = StringUtil.upperCaseFirstLetter(action.name);
+    const actionNameString = StringUtil.uppercaseFirstLetter(action.name);
 
     if (
       itemManager.activeItem !== action.nextItem

@@ -1,6 +1,6 @@
 import {
   DOMStyle,
-  TextBoxModel,
+  DOMText,
 } from '@nekobird/rocket';
 
 export interface TextAreaFieldConfig {
@@ -37,8 +37,6 @@ const TEXTAREAFIELD_DEFAULT_CONFIG: TextAreaFieldConfig = {
 };
 
 export class TextAreaField {
-  public textBoxModel: TextBoxModel;
-
   public config: TextAreaFieldConfig;
 
   public isInFocus: boolean = false;
@@ -46,10 +44,8 @@ export class TextAreaField {
   public previousKeyCode?: number;
 
   constructor(config?: Partial<TextAreaFieldConfig>) {
-    this.config = Object.assign({}, TEXTAREAFIELD_DEFAULT_CONFIG);
+    this.config = {...TEXTAREAFIELD_DEFAULT_CONFIG};
     this.setConfig(config);
-
-    this.textBoxModel = new TextBoxModel();
   }
 
   public setConfig(config?: Partial<TextAreaFieldConfig>): this {
@@ -136,10 +132,10 @@ export class TextAreaField {
     element = element as HTMLTextAreaElement;
 
     if (typeof text === 'string') {
-      return this.textBoxModel.getTextBoxHeightFromElement(element, text);
+      return DOMText.getTextBoxHeightFromElement(element, text);
     }
 
-    return this.textBoxModel.getTextBoxHeightFromElement(element);
+    return DOMText.getTextBoxHeightFromElement(element);
   }
 
   // TODO Rename This...
@@ -156,7 +152,7 @@ export class TextAreaField {
 
     element = element as HTMLTextAreaElement;
 
-    const height = this.textBoxModel.getTextBoxHeightFromElement(element);
+    const height = DOMText.getTextBoxHeightFromElement(element);
     
     element.style.height = `${height}px`;
 
