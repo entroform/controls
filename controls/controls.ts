@@ -1,6 +1,7 @@
 export * from './controllers/index';
 
 export * from './slider/mono-knob-slider/mono-knob-slider';
+
 export * from './slider/duo-knob-slider/duo-knob-slider';
 
 export * from './input-active-manager/input-active-manager';

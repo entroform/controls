@@ -42,7 +42,7 @@ export class ActionManager {
     ) {
       await config.beforeActivate(action, this.controller);
 
-      itemManager.activate(<HTMLElement>action.nextItem);
+      itemManager.activate(action.nextItem as HTMLElement);
 
       config.afterActivate(action, this.controller);
 

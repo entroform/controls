@@ -29,11 +29,16 @@ export interface MonoConfig {
   // TODO: Maybe add string selector support.
   items: NodeListOf<HTMLElement> | HTMLElement[];
 
-  isTrigger: (element: HTMLElement) => boolean;
+  isTrigger: (
+    element: HTMLElement
+  ) => boolean;
+
   mapTriggerToAction: (trigger: HTMLElement) => MonoTriggerMap | false;
+
   getItemId: (item: HTMLElement) => string | false;
 
   conditionActivate: ConditionHook<MonoAction, MonoController>;
+
   conditionDeactivate: ConditionHook<MonoAction, MonoController>;
 
   beforeActivate: Hook<MonoAction, MonoController>;
@@ -57,32 +62,42 @@ export const DEFAULT_CONFIG: MonoConfig = {
   cooldown: 200,
 
   listenToKeydown: false,
+
   deactivateOnOutsideAction: true,
 
   items: [],
 
   isTrigger: element => element.classList.contains('js-mono-item-trigger'),
+
   mapTriggerToAction: trigger => {
-    if (trigger.dataset.action === 'activate') {
-      return {
-        trigger,
-        action: 'activate',
-        payload: trigger.dataset.target,
-      };
-    } else if (trigger.dataset.action === 'deactivate') {
-      return {
-        trigger,
-        action: 'deactivate',
-      };
-    } else if (trigger.dataset.action === 'toggle') {
-      return {
-        trigger,
-        action: 'toggle',
-        payload: trigger.dataset.target,
-      };
+    switch (trigger.dataset.action) {
+      case 'activate': {
+        return {
+          trigger,
+          action: 'activate',
+          payload: trigger.dataset.target,
+        };
+      }
+
+      case 'deactivate': {
+        return {
+          trigger,
+          action: 'deactivate',
+        };
+      }
+
+      case 'toggle': {
+        return {
+          trigger,
+          action: 'toggle',
+          payload: trigger.dataset.target,
+        };
+      }
     }
+
     return false;
   },
+
   getItemId: item => (typeof item.dataset.id === 'string' ? item.dataset.id : false),
 
   conditionActivate: () => true,

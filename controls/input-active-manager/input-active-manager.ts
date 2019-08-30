@@ -14,6 +14,7 @@ export class InputActiveManager {
   public element?: InputElement;
 
   public isActive: boolean = false;
+
   public isReady: boolean = false;
 
   constructor(config?: Partial<InputActiveManagerConfig>) {
