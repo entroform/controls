@@ -1,4 +1,8 @@
 import {
+  DOMUtil,
+} from '@nekobird/rocket';
+
+import {
   DEFAULT_CONFIG,
   MonoConfig,
 } from './config';
@@ -25,7 +29,8 @@ export class MonoController {
   public isReady: boolean = false;
 
   constructor(config?: Partial<MonoConfig>) {
-    this.config = Object.assign({}, DEFAULT_CONFIG);
+    this.config = {...DEFAULT_CONFIG};
+
     this.setConfig(config);
 
     this.itemManager = new ItemManager(this);
@@ -43,6 +48,7 @@ export class MonoController {
 
   public initialize(): this {
     this.itemManager.initialize();
+
     this.eventManager.initialize();
     
     return this;
@@ -57,9 +63,11 @@ export class MonoController {
 
     if (
       isActive === true
-      && typeof activeItem !== 'undefined'
+      && DOMUtil.isHTMLElement(activeItem) === true
     ) {
-      return this.config.getItemId(activeItem) === id;
+      const activeItemElement = activeItem as HTMLElement;
+
+      return this.config.getItemId(activeItemElement) === id;
     }
 
     return false;

@@ -11,13 +11,15 @@ export class ItemManager {
 
   public items: HTMLElement[];
 
-  public activeItem?: HTMLElement;
-  public activeItemId?: string;
+  public activeItem: HTMLElement | null = null;
+
+  public activeItemId: string | null = null;
 
   public isActive: boolean = false;
 
   constructor(controller: MonoController) {
     this.controller = controller;
+
     this.items = [];
   }
 
@@ -57,7 +59,9 @@ export class ItemManager {
             config.deactivateItem(item, this.controller);
           } else if (id !== false) {
             this.activeItem = item;
+
             this.activeItemId = id;
+
             this.isActive = true;
           }
         }
@@ -115,12 +119,14 @@ export class ItemManager {
   public deactivate() {
     const { config } = this.controller;
 
-    if (typeof this.activeItem !== 'undefined') {
-      config.deactivateItem(this.activeItem, this.controller);
+    if (DOMUtil.isHTMLElement(this.activeItem) === true) {
+      const activeItem = this.activeItem as HTMLElement;
 
-      this.activeItem = undefined;
+      config.deactivateItem(activeItem, this.controller);
 
-      this.activeItemId = undefined;
+      this.activeItem = null;
+
+      this.activeItemId = null;
 
       this.isActive = false;
     }

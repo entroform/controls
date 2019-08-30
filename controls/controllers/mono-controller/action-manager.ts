@@ -11,15 +11,15 @@ export type MonoActionName = 'activate' | 'deactivate' | 'toggle';
 export interface MonoAction {
   name: MonoActionName;
 
-  currentItem?: HTMLElement;
-  currentItemId?: string;
+  currentItem: HTMLElement | null;
+  currentItemId: string | null;
 
-  nextItem?: HTMLElement;
-  nextItemId?: string;
+  nextItem: HTMLElement | null;
+  nextItemId: string | null;
 
-  targetId?: string;
+  targetId: string | null;
 
-  trigger?: HTMLElement;
+  trigger: HTMLElement | null;
 }
 
 export class ActionManager {
@@ -114,12 +114,12 @@ export class ActionManager {
       currentItem: itemManager.activeItem,
       currentItemId: itemManager.activeItemId,
 
-      nextItem: undefined,
-      nextItemId: undefined,
+      nextItem: null,
+      nextItemId: null,
 
-      targetId: undefined,
+      targetId: null,
 
-      trigger: undefined,
+      trigger: null,
     };
   }
 

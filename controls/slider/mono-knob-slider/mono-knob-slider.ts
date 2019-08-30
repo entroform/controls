@@ -3,6 +3,7 @@ import {
   DOMUtil,
   MonoDrag,
   Num,
+  RangeArray,
 } from '@nekobird/rocket';
 
 import {
@@ -79,7 +80,7 @@ export class MonoKnobSlider {
     const knobRect = knobElement.getBoundingClientRect();
 
     return {
-      trackRange: [0, trackRect.width - knobRect.width] as [number, number],
+      trackRange: [0, trackRect.width - knobRect.width] as RangeArray,
 
       trackElement,
       trackWidth: trackRect.width,
