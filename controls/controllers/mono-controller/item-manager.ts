@@ -1,4 +1,8 @@
 import {
+  DOMUtil,
+} from '@nekobird/rocket';
+
+import {
   MonoController,
 } from './mono-controller';
 
@@ -28,42 +32,16 @@ export class ItemManager {
   }
 
   public loadItemsFromConfig(): this {
-    const { config } = this.controller;
+    const { items } = this.controller.config;
 
-    if (
-      Array.isArray(config.items) === false &&
-      NodeList.prototype.isPrototypeOf(config.items as NodeListOf<HTMLElement>)
-    ) {
-      this.items = Array.from(config.items as NodeListOf<HTMLElement>);
-      return this;
-    }
+    this.items = DOMUtil.toHTMLElementArray(items);
 
-    if (Array.isArray(config.items) === true) {
-      this.items = config.items as HTMLElement[];
-      return this;
-    }
-
-    throw new Error('MonoController: Items not defined.');
-  }
-
-  public setItems(items: HTMLElement[] | NodeListOf<HTMLElement> | string): this {
-    if (typeof items === 'string') {
-      const results = document.querySelectorAll(items);
-      if (results !== null) this.items = Array.from(results as NodeListOf<HTMLElement>);
-      return this;
-    }
-
-    if (NodeList.prototype.isPrototypeOf(items)) {
-      this.items = Array.from(items as NodeListOf<HTMLElement>);
-      return this;
-    }
-
-    if (Array.isArray(items) === true) this.items = items as HTMLElement[];
     return this;
   }
 
   public filterItems(): this {
     this.items = this.items.filter(item => this.itemIsValid(item));
+
     return this;
   }
 
@@ -95,7 +73,9 @@ export class ItemManager {
 
     let valid: boolean = true;
 
-    if (config.getItemId(item) === false) valid = false;
+    if (config.getItemId(item) === false) {
+      valid = false;
+    }
 
     return valid;
   }
@@ -106,10 +86,14 @@ export class ItemManager {
     const matchedItems: HTMLElement[] = [];
 
     this.items.forEach(item => {
-      if (config.getItemId(item) === id) matchedItems.push(item);
+      if (config.getItemId(item) === id) {
+        matchedItems.push(item);
+      }
     });
 
-    if (matchedItems.length > 0) return matchedItems[0];
+    if (matchedItems.length > 0) {
+      return matchedItems[0];
+    }
 
     return false;
   }
@@ -119,8 +103,11 @@ export class ItemManager {
 
     if (this.itemIsValid(item) === true) {
       config.activateItem(item, this.controller);
+
       this.activeItem = item;
+
       this.activeItemId = config.getItemId(item) as string;
+
       this.isActive = true;
     }
   }
@@ -130,8 +117,11 @@ export class ItemManager {
 
     if (typeof this.activeItem !== 'undefined') {
       config.deactivateItem(this.activeItem, this.controller);
+
       this.activeItem = undefined;
+
       this.activeItemId = undefined;
+
       this.isActive = false;
     }
   }

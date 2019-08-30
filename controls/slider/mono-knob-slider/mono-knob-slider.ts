@@ -1,29 +1,31 @@
 import {
   DOMTraverse,
   DOMUtil,
+  MonoDrag,
   Num,
-  PointerDragEventManager,
 } from '@nekobird/rocket';
 
 import {
-  MonoKnobSliderConfig,
   MONO_KNOB_SLIDER_DEFAULT_CONFIG,
+  MonoKnobSliderConfig,
 } from './config';
 
 export class MonoKnobSlider {
   public config: MonoKnobSliderConfig;
 
   public isActive: boolean = false;
+
   public isDisabled: boolean = false;
 
   private knobOffset: number = 0;
 
   private currentValue: number = 0;
 
-  private pointerDragEventManager?: PointerDragEventManager;
+  private MonoDrag?: MonoDrag;
 
   constructor(config: Partial<MonoKnobSliderConfig>) {
-    this.config = Object.assign({}, MONO_KNOB_SLIDER_DEFAULT_CONFIG);
+    this.config = {...MONO_KNOB_SLIDER_DEFAULT_CONFIG};
+
     this.setConfig(config);
 
     this.config.onInit(this);
@@ -42,7 +44,9 @@ export class MonoKnobSlider {
   }
 
   public get value(): number {
-    const value = Num.modulate(this.currentValue, 1, this.config.valueRange, true);
+    const { valueRange } = this.config;
+
+    const value = Num.transform(this.currentValue, 1, valueRange, true);
 
     return this.offsetInterval(value);
   }
@@ -50,11 +54,13 @@ export class MonoKnobSlider {
   public set value(value: number) {
     const { trackRange, knobElement } = this.getSliderRect();
 
+    const { valueRange } = this.config;
+
     const computedValue = this.offsetInterval(value);
 
-    const left = Num.modulate(computedValue, this.config.valueRange, trackRange, true);
+    const left = Num.transform(computedValue, valueRange, trackRange, true);
 
-    this.currentValue = Num.modulate(computedValue, this.config.valueRange, 1, true);
+    this.currentValue = Num.transform(computedValue, valueRange, 1, true);
 
     this.config.moveKnob(knobElement, left);
 
@@ -90,13 +96,13 @@ export class MonoKnobSlider {
 
     const { valueRange } = this.config;
 
-    const value = Num.modulate(this.currentValue, 1, valueRange, true);
+    const value = Num.transform(this.currentValue, 1, valueRange, true);
 
     const computedValue = this.offsetInterval(value);
 
-    this.currentValue = Num.modulate(computedValue, valueRange, 1, true);
+    this.currentValue = Num.transform(computedValue, valueRange, 1, true);
 
-    const left = Num.modulate(computedValue, valueRange, trackRange, true);
+    const left = Num.transform(computedValue, valueRange, trackRange, true);
 
     this.config.moveKnob(knobElement, left);
 
@@ -187,13 +193,13 @@ export class MonoKnobSlider {
         } else if (pointerLeft > halfKnobWidth && pointerLeft < trackWidth - halfKnobWidth) {
           let left = pointerLeft - halfKnobWidth;
 
-          const value = Num.modulate(left, trackRange, this.config.valueRange, true);
+          const value = Num.transform(left, trackRange, this.config.valueRange, true);
 
           const computedValue = this.offsetInterval(value);
 
-          left = Num.modulate(computedValue, this.config.valueRange, trackRange, true);
+          left = Num.transform(computedValue, this.config.valueRange, trackRange, true);
 
-          this.currentValue = Num.modulate(computedValue, this.config.valueRange, 1, true);
+          this.currentValue = Num.transform(computedValue, this.config.valueRange, 1, true);
 
           this.config.moveKnob(knobElement, left);
 
@@ -235,13 +241,13 @@ export class MonoKnobSlider {
         left = 0;
       }
 
-      const value = Num.modulate(left, trackRange, this.config.valueRange, true);
+      const value = Num.transform(left, trackRange, this.config.valueRange, true);
 
       const computedValue = this.offsetInterval(value);
 
-      left = Num.modulate(computedValue, this.config.valueRange, trackRange, true);
+      left = Num.transform(computedValue, this.config.valueRange, trackRange, true);
 
-      this.currentValue = Num.modulate(left, trackRange, 1, true);
+      this.currentValue = Num.transform(left, trackRange, 1, true);
 
       this.config.moveKnob(knobElement, left);
 
@@ -261,17 +267,20 @@ export class MonoKnobSlider {
     let { trackElement } = this.config;
 
     if (DOMUtil.isHTMLElement(trackElement) === true) {
-      this.pointerDragEventManager = new PointerDragEventManager({
-        onEvent: event => event.preventDefault(),
+      this.MonoDrag = new MonoDrag({
+        preventDefault: true,
 
         keepHistory: false,
 
         target: this.config.trackElement,
 
-        onStart: this.eventHandlerStart,
+        onDragStart: this.eventHandlerStart,
+
         onDrag: this.eventHandlerDrag,
-        onEnd: this.eventHandlerEnd,
-        onCancel: this.eventHandlerEnd,
+
+        onDragEnd: this.eventHandlerEnd,
+
+        onDragCancel: this.eventHandlerEnd,
       });
     }
   }

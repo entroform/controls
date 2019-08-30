@@ -1,6 +1,6 @@
 import {
   DOMTraverse,
-  DragEventManager,
+  MonoTap,
 } from '@nekobird/rocket';
 
 import {
@@ -25,39 +25,33 @@ export type ActionConfigMapEntries = ActionConfigMapEntry[];
 export class EventManager {
   public controller: MonoController;
 
-  public dragEventManager: DragEventManager;
+  public monoTap: MonoTap;
 
   constructor(controller: MonoController) {
     this.controller = controller;
 
-    this.dragEventManager = new DragEventManager({
+    this.monoTap = new MonoTap({
       onUp: this.onUp
     });
   }
 
   public initialize() {
-    this.dragEventManager.initialize();
+    const { listenToKeydown } = this.controller.config;
 
-    if (this.controller.config.listenToKeydown === true) {
+    if (listenToKeydown === true) {
       window.addEventListener('keydown', this.eventHandlerKeydown);
     }
   }
 
-  private onUp = event => {
+  private onUp = (event, story) => {
     this.handleOutsideAction(event);
 
-    if (typeof event.downData !== 'object') {
-      return;
-    }
-
-    const targetDownElement = event.getTargetElementFromData(event.downData);
-    if (targetDownElement === false) {
-      return;
-    }
+    const targetDownElement = story.startingEvent.target;
 
     const { config } = this.controller;
 
     let trigger = DOMTraverse.findAncestor(targetDownElement, config.isTrigger, false);
+    
     if (trigger === false) {
       return;
     }

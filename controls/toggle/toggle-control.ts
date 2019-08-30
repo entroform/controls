@@ -5,14 +5,20 @@ import {
 export interface ToggleControlConfig {
   target?: HTMLElement;
 
-  onToggleControl: (element: HTMLElement, value: boolean, control: ToggleControl) => void;
+  onToggleControl: (
+    element: HTMLElement,
+    value: boolean,
+    control: ToggleControl,
+  ) => void;
 
-  transformValue: <V>(element: HTMLElement, value: boolean, control: ToggleControl) => V;
+  transformValue: <V>(
+    element: HTMLElement,
+    value: boolean,
+    control: ToggleControl,
+  ) => V;
 }
 
 export const TOGGLE_CONTROL_DEFAULT_CONFIG: ToggleControlConfig = {
-  target: undefined,
-
   onToggleControl: () => {},
 
   transformValue: <value>(element, value) => value,
@@ -26,7 +32,7 @@ export class ToggleControl {
   public isDisabled: boolean = false;
 
   constructor(config: Partial<ToggleControlConfig>) {
-    this.config = Object.assign({}, TOGGLE_CONTROL_DEFAULT_CONFIG);
+    this.config = {...TOGGLE_CONTROL_DEFAULT_CONFIG};
 
     this.setConfig(config);
   }

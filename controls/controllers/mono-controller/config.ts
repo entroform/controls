@@ -1,4 +1,8 @@
 import {
+  HTMLElements,
+} from '@nekobird/rocket';
+
+import {
   AfterActionCallback,
   BeforeActionCallback,
   ConditionHook,
@@ -26,12 +30,9 @@ export interface MonoConfig {
   listenToKeydown: boolean;
   deactivateOnOutsideAction: boolean;
 
-  // TODO: Maybe add string selector support.
-  items: NodeListOf<HTMLElement> | HTMLElement[];
+  items: HTMLElements;
 
-  isTrigger: (
-    element: HTMLElement
-  ) => boolean;
+  isTrigger: (element: HTMLElement) => boolean;
 
   mapTriggerToAction: (trigger: HTMLElement) => MonoTriggerMap | false;
 

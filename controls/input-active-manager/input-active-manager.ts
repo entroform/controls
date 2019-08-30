@@ -18,7 +18,8 @@ export class InputActiveManager {
   public isReady: boolean = false;
 
   constructor(config?: Partial<InputActiveManagerConfig>) {
-    this.config = Object.assign({}, INPUT_FOCUS_MANAGER_CONFIG);
+    this.config = {...INPUT_FOCUS_MANAGER_CONFIG};
+
     this.setConfig(config);
 
     this.updateElement();
