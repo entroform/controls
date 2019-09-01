@@ -25,7 +25,8 @@ export class SequenceController {
   public isReady: boolean = false;
 
   constructor(config?: Partial<SequenceConfig>) {
-    this.config = Object.assign({}, DEFAULT_CONFIG);
+    this.config = {...DEFAULT_CONFIG};
+
     this.setConfig(config);
 
     this.itemManager = new ItemManager(this);

@@ -1,8 +1,9 @@
 import {
   DOMTraverse,
   DOMUtil,
+  MonoDrag,
   Num,
-  PointerDragEventManager,
+  RangeArray,
 } from '@nekobird/rocket';
 
 import {
@@ -29,10 +30,11 @@ export class DuoKnobSlider {
   public knobOne: KnobOne;
   public knobTwo: KnobTwo;
 
-  private currentValue: [number, number];
+  private currentValue: RangeArray;
 
   constructor(config: Partial<DuoKnobSliderConfig>) {
-    this.config = Object.assign({}, DUO_KNOB_SLIDER_DEFAULT_CONFIG);
+    this.config = {...DUO_KNOB_SLIDER_DEFAULT_CONFIG};
+
     this.setConfig(config);
 
     this.knobOne = new KnobOne(this);
@@ -55,7 +57,7 @@ export class DuoKnobSlider {
     return this;
   }
 
-  public set value(value: [number, number]) {
+  public set value(value: RangeArray) {
     const {
       knobOneTrackRange,
       knobOneElement,
@@ -66,11 +68,13 @@ export class DuoKnobSlider {
     const computedMinValue = this.offsetInterval(value[0]);
     const computedMaxValue = this.offsetInterval(value[1]);
 
-    const knobOneLeft = Num.modulate(computedMinValue, this.config.range, knobOneTrackRange, true);
-    const knobTwoLeft = Num.modulate(computedMaxValue, this.config.range, knobTwoTrackRange, true);
+    const { range } = this.config;
 
-    const min = Num.modulate(computedMinValue, this.config.range, 1, true);
-    const max = Num.modulate(computedMaxValue, this.config.range, 1, true);
+    const knobOneLeft = Num.modulate(computedMinValue, range, knobOneTrackRange, true);
+    const knobTwoLeft = Num.modulate(computedMaxValue, range, knobTwoTrackRange, true);
+
+    const min = Num.modulate(computedMinValue, range, 1, true);
+    const max = Num.modulate(computedMaxValue, range, 1, true);
 
     this.currentValue = [min, max];
 
@@ -317,7 +321,7 @@ export class DuoKnobSlider {
     const { knobOneElement, knobTwoElement } = this.config;
 
     if (DOMUtil.isHTMLElement(knobOneElement, knobTwoElement) === true) {
-      this.knobOnePointerDragEventManager = new PointerDragEventManager({
+      this.knobOneMonoDrag = new MonoDrag({
         target: knobOneElement,
 
         keepHistory: false,
@@ -330,7 +334,7 @@ export class DuoKnobSlider {
         onCancel: this.knobOneEventHandlerEnd,
       });
 
-      this.knobTwoPointerDragEventManager = new PointerDragEventManager({
+      this.knobTwoMonoDrag = new MonoDrag({
         target: knobTwoElement,
 
         keepHistory: false,

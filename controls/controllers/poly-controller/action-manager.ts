@@ -189,18 +189,29 @@ export class ActionManager {
 
   private handleAction(action: PolyAction): Promise<void> {
     switch (action.name) {
-      case 'activate':
+      case 'activate': {
         return this.handleActionActivate(action);
-      case 'deactivate':
+      }
+
+      case 'deactivate': {
         return this.handleActionDeactivate(action);
-      case 'toggle':
+      }
+
+      case 'toggle': {
         return this.handleActionToggle(action);
-      case 'activate-all':
+      }
+
+      case 'activate-all': {
         return this.handleActionActivateAll(action);
-      case 'deactivate-all':
+      }
+
+      case 'deactivate-all': {
         return this.handleActionDeactivateAll(action);
-      case 'toggle-all':
+      }
+
+      case 'toggle-all': {
         return this.handleActionToggleAll(action);
+      }
     }
   }
 

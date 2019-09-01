@@ -2,7 +2,7 @@ import {
   DOMTraverse,
   DOMUtil,
   Num,
-  PointerDragEventManager,
+  MonoDrag,
 } from '@nekobird/rocket';
 
 import {
@@ -12,7 +12,7 @@ import {
 export class KnobTwo {
   private duoKnobSlider: DuoKnobSlider;
 
-  public pointerDragEventManager?: PointerDragEventManager;
+  public monoDrag?: MonoDrag;
 
   public isActive: boolean = false;
   public isReady: boolean = false;
@@ -29,17 +29,17 @@ export class KnobTwo {
     const { knobTwoElement } = this.duoKnobSlider.config;
 
     if (DOMUtil.isHTMLElement(knobTwoElement) === true) {
-      this.pointerDragEventManager = new PointerDragEventManager({
+      this.monoDrag = new MonoDrag({
         target: knobTwoElement,
 
         keepHistory: false,
 
         preventDefault: true,
 
-        onStart: this.eventHandlerStart,
+        onDragStart: this.eventHandlerStart,
         onDrag: this.eventHandlerDrag,
-        onEnd: this.eventHandlerEnd,
-        onCancel: this.eventHandlerEnd,
+        onDragEnd: this.eventHandlerEnd,
+        onDragCancel: this.eventHandlerEnd,
       });
 
       this.isReady = true;

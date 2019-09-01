@@ -1,4 +1,8 @@
 import {
+  DOMUtil,
+} from '@nekobird/rocket';
+
+import {
   SequenceController,
 } from './sequence-controller';
 
@@ -31,22 +35,9 @@ export class ItemManager {
   public loadItemsFromConfig(): this {
     const { config } = this.controller;
 
-    if (
-      Array.isArray(config.items) === false
-      && NodeList.prototype.isPrototypeOf(config.items as NodeListOf<HTMLElement>)
-    ) {
-      this.items = Array.from(config.items as NodeListOf<HTMLElement>);
+    this.items = DOMUtil.toHTMLElementArray(config.items);
 
-      return this;
-    }
-
-    if (Array.isArray(config.items) === true) {
-      this.items = config.items as HTMLElement[];
-
-      return this;
-    }
-
-    throw new Error('SequenceController: Items not defined.');
+    return this;
   }
 
   public filterItems(): this {

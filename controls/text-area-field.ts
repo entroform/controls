@@ -17,6 +17,7 @@ export interface TextAreaFieldConfig {
   onFocus: (textareafield: TextAreaField) => void;
   onInput: (textareafield: TextAreaField) => void;
   onPaste: (textareafield: TextAreaField) => void;
+
   onGrow: (height: number, textareafield: TextAreaField) => void;
 }
 
@@ -25,6 +26,7 @@ const TEXTAREAFIELD_DEFAULT_CONFIG: TextAreaFieldConfig = {
 
   disableLineBreaks: false,
   disableTabs: false,
+
   limitNumberOfCharacters: false,
   removeLeadingWhitespaces: false,
   removeMultipleWhitespaces: false,
@@ -33,6 +35,7 @@ const TEXTAREAFIELD_DEFAULT_CONFIG: TextAreaFieldConfig = {
   onFocus: () => {},
   onInput: () => {},
   onPaste: () => {},
+
   onGrow: () => {},
 };
 
@@ -45,6 +48,7 @@ export class TextAreaField {
 
   constructor(config?: Partial<TextAreaFieldConfig>) {
     this.config = {...TEXTAREAFIELD_DEFAULT_CONFIG};
+
     this.setConfig(config);
   }
 
@@ -56,9 +60,7 @@ export class TextAreaField {
     if (TextAreaField.isHTMLTextAreaElement(this.config.element) === true) {
       return this;
     } else {
-      throw new Error(
-        '@nekobird/controls: TextAreaField: Element is undefined or is not a valid HTMLTextAreaElement.',
-      );
+      throw new Error('@nekobird/controls: TextAreaField: Element is undefined or is not a valid HTMLTextAreaElement.');
     }
   }
 

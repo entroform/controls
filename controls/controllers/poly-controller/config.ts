@@ -1,8 +1,17 @@
-import { AfterActionCallback, BeforeActionCallback, ConditionHook } from '../index';
+import {
+  AfterActionCallback,
+  BeforeActionCallback,
+  ConditionHook,
+} from '../index';
 
-import { PolyController } from './poly-controller';
+import {
+  PolyController,
+} from './poly-controller';
 
-import { PolyAction, PolyActionName } from './action-manager';
+import {
+  PolyAction,
+  PolyActionName,
+} from './action-manager';
 
 export interface PolyTriggerMap {
   trigger: HTMLElement;
@@ -20,7 +29,9 @@ export interface PolyConfig {
   items: NodeListOf<HTMLElement> | HTMLElement[];
 
   isTrigger: (element: HTMLElement) => boolean;
+
   mapTriggerToAction: (trigger: HTMLElement) => PolyTriggerMap | false;
+
   getItemId: (item: HTMLElement) => string | false;
 
   conditionActivate: ConditionHook<PolyAction, PolyController>;
@@ -53,48 +64,64 @@ export const DEFAULT_CONFIG: PolyConfig = {
   cooldown: 200,
 
   deactivateAllOnOutsideAction: false,
+
   listenToKeydown: false,
 
   items: [],
 
   isTrigger: element => element.classList.contains('js-poly-item-trigger'),
+
   mapTriggerToAction: trigger => {
-    if (trigger.dataset.action === 'activate') {
-      return {
-        trigger,
-        action: 'activate',
-        payload: trigger.dataset.target,
-      };
-    } else if (trigger.dataset.action === 'deactivate') {
-      return {
-        trigger,
-        action: 'deactivate',
-        payload: trigger.dataset.target,
-      };
-    } else if (trigger.dataset.action === 'toggle') {
-      return {
-        trigger,
-        action: 'toggle',
-        payload: trigger.dataset.target,
-      };
-    } else if (trigger.dataset.action === 'activate-all') {
-      return {
-        trigger,
-        action: 'activate-all',
-      };
-    } else if (trigger.dataset.action === 'deactivate-all') {
-      return {
-        trigger,
-        action: 'deactivate-all',
-      };
-    } else if (trigger.dataset.action === 'toggle-all') {
-      return {
-        trigger,
-        action: 'toggle-all',
-      };
+    switch(trigger.dataset.action) {
+      case 'activate': {
+        return {
+          trigger,
+          action: 'activate',
+          payload: trigger.dataset.target,
+        };
+      }
+
+      case 'deactivate': {
+        return {
+          trigger,
+          action: 'deactivate',
+          payload: trigger.dataset.target,
+        };
+      }
+      
+      case 'toggle': {
+        return {
+          trigger,
+          action: 'toggle',
+          payload: trigger.dataset.target,
+        };
+      }
+      
+      case 'activate-all': {
+        return {
+          trigger,
+          action: 'activate-all',
+        };
+      }
+      
+      case 'deactivate-all': {
+        return {
+          trigger,
+          action: 'deactivate-all',
+        };
+      }
+      
+      case 'toggle-all': {
+        return {
+          trigger,
+          action: 'toggle-all',
+        };
+      }
     }
+
     return false;
   },
+
   getItemId: item => (typeof item.dataset.id === 'string' ? item.dataset.id : false),
 
   conditionActivate: () => true,

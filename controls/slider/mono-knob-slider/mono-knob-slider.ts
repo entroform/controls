@@ -22,7 +22,7 @@ export class MonoKnobSlider {
 
   private currentValue: number = 0;
 
-  private MonoDrag?: MonoDrag;
+  private monoDrag?: MonoDrag;
 
   constructor(config: Partial<MonoKnobSliderConfig>) {
     this.config = {...MONO_KNOB_SLIDER_DEFAULT_CONFIG};
@@ -268,7 +268,7 @@ export class MonoKnobSlider {
     let { trackElement } = this.config;
 
     if (DOMUtil.isHTMLElement(trackElement) === true) {
-      this.MonoDrag = new MonoDrag({
+      this.monoDrag = new MonoDrag({
         preventDefault: true,
 
         keepHistory: false,
